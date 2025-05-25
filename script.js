@@ -45,14 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 이모티콘 관련 기능
     const customEmojis = [
-        { src: 'https://i.imgur.com/8qO1TtL.png', code: ':잘자요:' },
-        { src: 'https://i.imgur.com/Y6rtH1J.png', code: ':아침:' },
-        { src: 'https://i.imgur.com/qQa1Q5N.png', code: ':안녕:' },
-        { src: 'https://i.imgur.com/H8KZuXB.png', code: ':마스크:' },
-        { src: 'https://i.imgur.com/KcZj3Q9.png', code: ':화남:' },
-        { src: 'https://i.imgur.com/mQ3NSGZ.png', code: ':궁금:' },
-        { src: 'https://i.imgur.com/VrXEzen.png', code: ':하트:' },
-        { src: 'https://i.imgur.com/dqEE6Fw.png', code: ':슬픔:' }
+        { src: 'https://media.tenor.com/images/f8ce931b9e5f5f4669c4c4c1d88f4d25/tenor.gif', code: ':잘자요:' },
+        { src: 'https://media.tenor.com/images/3e4a4f9da483cdcb3a20d59f830ff7e6/tenor.gif', code: ':아침:' },
+        { src: 'https://media.tenor.com/images/f77356fee87da6bf58bfa6f683e7e0e4/tenor.gif', code: ':안녕:' },
+        { src: 'https://media.tenor.com/images/2c4d8ad0c0f1d8e6d0f8f0a0ec6c1c5d/tenor.gif', code: ':마스크:' },
+        { src: 'https://media.tenor.com/images/1a7ff6e0d0f9c7c2f5f6e6d0f8f0a0e/tenor.gif', code: ':화남:' },
+        { src: 'https://media.tenor.com/images/0f5d12f6e5f0f0f0f0f0f0f0f0f0f0f/tenor.gif', code: ':궁금:' },
+        { src: 'https://media.tenor.com/images/1f5d12f6e5f0f0f0f0f0f0f0f0f0f0/tenor.gif', code: ':하트:' },
+        { src: 'https://media.tenor.com/images/2f5d12f6e5f0f0f0f0f0f0f0f0f0f0/tenor.gif', code: ':슬픔:' }
     ];
 
     // 커스텀 이모티콘 로드
@@ -136,11 +136,19 @@ document.addEventListener('DOMContentLoaded', () => {
             minute: '2-digit' 
         });
 
+        let messageText = message.text;
+        
+        // 이모티콘 코드를 이미지로 변환
+        customEmojis.forEach(emoji => {
+            const regex = new RegExp(emoji.code, 'g');
+            messageText = messageText.replace(regex, `<img src="${emoji.src}" class="chat-emoji" alt="${emoji.code}">`);
+        });
+
         if (message.type === 'system') {
             const systemMessage = `
                 <div class="message system">
                     <div class="message-text">
-                        ${message.text}
+                        ${messageText}
                     </div>
                 </div>
             `;
@@ -157,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="timestamp">${time}</span>
                         </div>
                         <div class="message-text">
-                            ${message.text}
+                            ${messageText}
                         </div>
                     </div>
                 </div>
