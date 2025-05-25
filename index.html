@@ -12,6 +12,11 @@
     <div class="login-container" id="loginContainer">
         <div class="login-box">
             <h2>채팅 입장</h2>
+            <div class="profile-upload">
+                <img id="profilePreview" src="https://via.placeholder.com/100" alt="프로필">
+                <input type="file" id="profileUpload" accept="image/*">
+                <label for="profileUpload">프로필 사진 선택</label>
+            </div>
             <input type="text" id="usernameInput" placeholder="닉네임을 입력하세요" maxlength="10">
             <button id="joinButton">입장하기</button>
         </div>
@@ -31,6 +36,20 @@
             <button class="emoji-button">
                 <i class="far fa-smile"></i>
             </button>
+            <div class="emoji-picker" style="display: none;">
+                <div class="emoji-tabs">
+                    <button class="emoji-tab active" data-tab="basic">기본</button>
+                    <button class="emoji-tab" data-tab="custom">캐릭터</button>
+                </div>
+                <div class="emoji-content" id="basicEmojis">
+                    <span>😊</span><span>😂</span><span>🥰</span><span>😍</span>
+                    <span>😎</span><span>😇</span><span>🤔</span><span>😅</span>
+                    <span>😭</span><span>😤</span><span>😡</span><span>🥺</span>
+                </div>
+                <div class="emoji-content" id="customEmojis" style="display: none;">
+                    <!-- 캐릭터 이모티콘들은 여기에 추가됩니다 -->
+                </div>
+            </div>
             <input type="text" placeholder="메시지를 입력하세요...">
             <button class="send-button">
                 <i class="fas fa-paper-plane"></i>
