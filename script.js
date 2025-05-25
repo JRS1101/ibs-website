@@ -45,14 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 이모티콘 관련 기능
     const customEmojis = [
-        { src: 'https://media.tenor.com/images/f8ce931b9e5f5f4669c4c4c1d88f4d25/tenor.gif', code: ':잘자요:' },
-        { src: 'https://media.tenor.com/images/3e4a4f9da483cdcb3a20d59f830ff7e6/tenor.gif', code: ':아침:' },
-        { src: 'https://media.tenor.com/images/f77356fee87da6bf58bfa6f683e7e0e4/tenor.gif', code: ':안녕:' },
-        { src: 'https://media.tenor.com/images/2c4d8ad0c0f1d8e6d0f8f0a0ec6c1c5d/tenor.gif', code: ':마스크:' },
-        { src: 'https://media.tenor.com/images/1a7ff6e0d0f9c7c2f5f6e6d0f8f0a0e/tenor.gif', code: ':화남:' },
-        { src: 'https://media.tenor.com/images/0f5d12f6e5f0f0f0f0f0f0f0f0f0f0f/tenor.gif', code: ':궁금:' },
-        { src: 'https://media.tenor.com/images/1f5d12f6e5f0f0f0f0f0f0f0f0f0f0/tenor.gif', code: ':하트:' },
-        { src: 'https://media.tenor.com/images/2f5d12f6e5f0f0f0f0f0f0f0f0f0f0/tenor.gif', code: ':슬픔:' }
+        { src: 'https://media.giphy.com/media/RMwgs5kZqkJJS0F5rp/giphy.gif', code: ':잘자요:' },
+        { src: 'https://media.giphy.com/media/XGmHk5ZWDrHiw/giphy.gif', code: ':아침:' },
+        { src: 'https://media.giphy.com/media/w89ak63KNl0nJl80ig/giphy.gif', code: ':안녕:' },
+        { src: 'https://media.giphy.com/media/3BUYbmX7uqX9YZjt5F/giphy.gif', code: ':마스크:' },
+        { src: 'https://media.giphy.com/media/l1J9u3TZfpmeDLkD6/giphy.gif', code: ':화남:' },
+        { src: 'https://media.giphy.com/media/TPl5N4Ci49ZQY/giphy.gif', code: ':궁금:' },
+        { src: 'https://media.giphy.com/media/LnKa2WLkd6eAM/giphy.gif', code: ':하트:' },
+        { src: 'https://media.giphy.com/media/7SF5scGB2AFrgsXP63/giphy.gif', code: ':슬픔:' }
     ];
 
     // 커스텀 이모티콘 로드
