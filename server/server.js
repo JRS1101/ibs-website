@@ -4,7 +4,8 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
     cors: {
         origin: "*",
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
+        credentials: true
     },
     maxHttpBufferSize: 1e8 // 100MB로 최대 파일 크기 설정
 });
@@ -14,7 +15,13 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Credentials', 'true');
     next();
+});
+
+// 상태 확인 엔드포인트
+app.get('/status', (req, res) => {
+    res.json({ status: 'ok', message: '서버가 정상적으로 실행 중입니다.' });
 });
 
 // 파일 저장을 위한 메모리 저장소
@@ -48,27 +55,33 @@ let users = [];
 
 // Socket.IO 이벤트 처리
 io.on('connection', (socket) => {
-    console.log('사용자 연결됨');
+    console.log('사용자 연결됨:', socket.id);
 
     // 채팅방 입장
     socket.on('join', (data) => {
-        const user = {
-            id: socket.id,
-            username: data.username,
-            profile: data.profile
-        };
-        
-        users.push(user);
-        
-        // 입장 메시지 전송
-        io.emit('message', {
-            type: 'system',
-            text: `${user.username}님이 입장하셨습니다.`,
-            timestamp: new Date()
-        });
-        
-        // 접속자 수 업데이트
-        io.emit('userList', users);
+        try {
+            const user = {
+                id: socket.id,
+                username: data.username,
+                profile: data.profile
+            };
+            
+            users.push(user);
+            
+            // 입장 메시지 전송
+            io.emit('message', {
+                type: 'system',
+                text: `${user.username}님이 입장하셨습니다.`,
+                timestamp: new Date()
+            });
+            
+            // 접속자 수 업데이트
+            io.emit('userList', users);
+            
+            console.log(`${user.username} 입장`);
+        } catch (error) {
+            console.error('입장 처리 중 오류:', error);
+        }
     });
 
     // 메시지 수신 및 전송

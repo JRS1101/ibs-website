@@ -4,11 +4,14 @@ const SERVER_URL = 'https://jeialeseu-silsigan-caeting.onrender.com';
 document.addEventListener('DOMContentLoaded', () => {
     // Socket.IO 연결 설정
     const socket = io(SERVER_URL, {
-        transports: ['websocket'],
+        transports: ['websocket', 'polling'],
         cors: {
-            origin: '*',
-            methods: ['GET', 'POST']
-        }
+            origin: "*",
+            methods: ["GET", "POST"]
+        },
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000
     });
     
     // DOM 요소
@@ -108,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('connect_error', (error) => {
         console.error('연결 오류:', error);
+        alert('서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.');
     });
 
     // 입장 버튼 클릭
