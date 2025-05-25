@@ -216,15 +216,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (message.file.type.startsWith('image/')) {
                 fileContent = `
                     <div class="message-file">
-                        <img src="${message.file.data}" alt="Uploaded image">
+                        <img src="${message.file.data}" alt="Uploaded image" onclick="window.open('${message.file.url}', '_blank')">
+                        <a href="${message.file.url}" class="file-download" download="${message.file.name}">
+                            <i class="fas fa-download"></i>
+                            <span>다운로드</span>
+                        </a>
                     </div>
                 `;
             } else {
+                const fileSize = message.file.size ? `(${formatFileSize(message.file.size)})` : '';
                 fileContent = `
                     <div class="message-file">
-                        <a href="${message.file.data}" class="file-download" download="${message.file.name}">
+                        <a href="${message.file.url}" class="file-download" download="${message.file.name}">
                             <i class="fas fa-file-pdf"></i>
-                            <span>${message.file.name}</span>
+                            <span>${message.file.name} ${fileSize}</span>
+                            <i class="fas fa-download"></i>
                         </a>
                     </div>
                 `;
@@ -286,4 +292,13 @@ document.addEventListener('DOMContentLoaded', () => {
             emojiPicker.style.display = 'none';
         }
     });
+
+    // 파일 크기 포맷팅 함수
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 }); 
