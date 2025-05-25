@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 채팅</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h2>채팅 입장</h2>
+            <input type="text" id="usernameInput" placeholder="닉네임을 입력하세요" maxlength="10">
+            <button id="joinButton">입장하기</button>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chatContainer" style="display: none;">
+        <div class="chat-header">
+            <h2>채팅방</h2>
+            <div class="online-count">
+                <i class="fas fa-users"></i>
+                <span id="onlineCount">0 온라인</span>
+            </div>
+        </div>
+        <div class="chat-messages">
+        </div>
+        <div class="chat-input">
+            <button class="emoji-button">
+                <i class="far fa-smile"></i>
+            </button>
+            <input type="text" placeholder="메시지를 입력하세요...">
+            <button class="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
