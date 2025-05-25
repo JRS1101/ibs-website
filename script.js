@@ -26,9 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileUpload = document.getElementById('profileUpload');
     const profilePreview = document.getElementById('profilePreview');
     const onlineCount = document.getElementById('onlineCount');
+    const fileButton = document.querySelector('.file-button');
+    const fileUpload = document.getElementById('fileUpload');
+    const filePreview = document.querySelector('.file-preview');
+    const imagePreview = document.getElementById('imagePreview');
+    const fileInfo = document.getElementById('fileInfo');
+    const cancelUpload = document.querySelector('.cancel-upload');
 
     let username = '';
     let userProfile = 'https://via.placeholder.com/40';
+    let currentFile = null;
 
     // 프로필 이미지 업로드 처리
     profileUpload.addEventListener('change', (e) => {
@@ -120,12 +127,71 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 파일 업로드 버튼 클릭
+    fileButton.addEventListener('click', () => {
+        fileUpload.click();
+    });
+
+    // 파일 선택 처리
+    fileUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        currentFile = file;
+        
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+                fileInfo.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.display = 'none';
+            fileInfo.style.display = 'flex';
+            fileInfo.innerHTML = `
+                <i class="fas fa-file-pdf"></i>
+                <span>${file.name}</span>
+            `;
+        }
+
+        filePreview.style.display = 'block';
+    });
+
+    // 파일 업로드 취소
+    cancelUpload.addEventListener('click', () => {
+        currentFile = null;
+        filePreview.style.display = 'none';
+        fileUpload.value = '';
+    });
+
     // 메시지 전송 함수
     function sendMessage() {
         const messageText = input.value.trim();
-        if (messageText === '') return;
+        
+        if (messageText === '' && !currentFile) return;
 
-        socket.emit('sendMessage', messageText);
+        if (currentFile) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const fileData = {
+                    name: currentFile.name,
+                    type: currentFile.type,
+                    data: e.target.result
+                };
+                
+                socket.emit('sendMessage', messageText, fileData);
+                
+                currentFile = null;
+                filePreview.style.display = 'none';
+                fileUpload.value = '';
+            };
+            reader.readAsDataURL(currentFile);
+        } else {
+            socket.emit('sendMessage', messageText);
+        }
+
         input.value = '';
     }
 
@@ -136,7 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
             minute: '2-digit' 
         });
 
-        let messageText = message.text;
+        let messageText = message.text || '';
+        let fileContent = '';
         
         // 이모티콘 코드를 이미지로 변환
         customEmojis.forEach(emoji => {
@@ -144,12 +211,33 @@ document.addEventListener('DOMContentLoaded', () => {
             messageText = messageText.replace(regex, `<img src="${emoji.src}" class="chat-emoji" alt="${emoji.code}">`);
         });
 
+        // 파일 처리
+        if (message.file) {
+            if (message.file.type.startsWith('image/')) {
+                fileContent = `
+                    <div class="message-file">
+                        <img src="${message.file.data}" alt="Uploaded image">
+                    </div>
+                `;
+            } else {
+                fileContent = `
+                    <div class="message-file">
+                        <a href="${message.file.data}" class="file-download" download="${message.file.name}">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>${message.file.name}</span>
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
         if (message.type === 'system') {
             const systemMessage = `
                 <div class="message system">
                     <div class="message-text">
                         ${messageText}
                     </div>
+                    ${fileContent}
                 </div>
             `;
             chatMessages.insertAdjacentHTML('beforeend', systemMessage);
@@ -167,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="message-text">
                             ${messageText}
                         </div>
+                        ${fileContent}
                     </div>
                 </div>
             `;
