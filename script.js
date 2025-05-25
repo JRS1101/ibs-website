@@ -4,23 +4,33 @@ const SERVER_URL = 'https://jeialeseu-silsigan-caeting.onrender.com';
 document.addEventListener('DOMContentLoaded', () => {
     // Socket.IO 연결 설정
     const socket = io(SERVER_URL, {
-        transports: ['websocket', 'polling'],
-        cors: {
-            origin: "*",
-            methods: ["GET", "POST"]
-        },
+        transports: ['websocket'],
         reconnection: true,
         reconnectionAttempts: 5,
-        reconnectionDelay: 1000
+        reconnectionDelay: 1000,
+        withCredentials: true
     });
     
+    // 연결 상태 로깅
+    socket.on('connect', () => {
+        console.log('서버에 연결되었습니다.');
+    });
+
+    socket.on('connect_error', (error) => {
+        console.error('연결 오류:', error);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('서버와 연결이 끊어졌습니다.');
+    });
+
     // DOM 요소
     const loginContainer = document.getElementById('loginContainer');
     const chatContainer = document.getElementById('chatContainer');
     const usernameInput = document.getElementById('usernameInput');
     const joinButton = document.getElementById('joinButton');
     const chatMessages = document.querySelector('.chat-messages');
-    const input = document.querySelector('.chat-input input');
+    const messageInput = document.querySelector('.chat-input input');
     const sendButton = document.querySelector('.send-button');
     const emojiButton = document.querySelector('.emoji-button');
     const emojiPicker = document.querySelector('.emoji-picker');
@@ -94,25 +104,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // 이모티콘 선택
     document.querySelectorAll('.emoji-content span, .emoji-content img').forEach(emoji => {
         emoji.addEventListener('click', () => {
-            insertEmoji(emoji.innerText || emoji.alt);
+            const emojiCode = emoji.innerText || emoji.alt;
+            insertEmoji(emojiCode);
             emojiPicker.style.display = 'none';
         });
     });
 
     function insertEmoji(emoji) {
-        input.value += emoji;
-        input.focus();
+        const cursorPos = messageInput.selectionStart;
+        const textBefore = messageInput.value.substring(0, cursorPos);
+        const textAfter = messageInput.value.substring(cursorPos);
+        messageInput.value = textBefore + emoji + textAfter;
+        messageInput.focus();
+        // 커서 위치 조정
+        messageInput.selectionStart = cursorPos + emoji.length;
+        messageInput.selectionEnd = cursorPos + emoji.length;
     }
-
-    // 연결 상태 로깅
-    socket.on('connect', () => {
-        console.log('서버에 연결되었습니다.');
-    });
-
-    socket.on('connect_error', (error) => {
-        console.error('연결 오류:', error);
-        alert('서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.');
-    });
 
     // 입장 버튼 클릭
     joinButton.addEventListener('click', () => {
@@ -136,8 +143,27 @@ document.addEventListener('DOMContentLoaded', () => {
         fileUpload.click();
     });
 
-    // 파일 선택 처리
-    fileUpload.addEventListener('change', (e) => {
+    // 파일 업로드 취소
+    cancelUpload.addEventListener('click', () => {
+        currentFile = null;
+        filePreview.style.display = 'none';
+        imagePreview.src = '';
+        fileInfo.innerHTML = '';
+        try {
+            fileUpload.value = '';
+        } catch (e) {
+            // IE에서는 보안상의 이유로 value를 직접 설정할 수 없음
+            // 새로운 input 요소로 교체
+            const newFileUpload = fileUpload.cloneNode(true);
+            fileUpload.parentNode.replaceChild(newFileUpload, fileUpload);
+            fileUpload = newFileUpload;
+            // 이벤트 리스너 다시 등록
+            fileUpload.addEventListener('change', handleFileUpload);
+        }
+    });
+
+    // 파일 선택 처리 함수
+    function handleFileUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
 
@@ -161,18 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         filePreview.style.display = 'block';
-    });
+    }
 
-    // 파일 업로드 취소
-    cancelUpload.addEventListener('click', () => {
-        currentFile = null;
-        filePreview.style.display = 'none';
-        fileUpload.value = '';
-    });
+    // 파일 업로드 이벤트 리스너 등록
+    fileUpload.addEventListener('change', handleFileUpload);
 
     // 메시지 전송 함수
     function sendMessage() {
-        const messageText = input.value.trim();
+        const messageText = messageInput.value.trim();
         
         if (messageText === '' && !currentFile) return;
 
@@ -182,7 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const fileData = {
                     name: currentFile.name,
                     type: currentFile.type,
-                    data: e.target.result
+                    data: e.target.result,
+                    size: currentFile.size
                 };
                 
                 socket.emit('sendMessage', messageText, fileData);
@@ -193,10 +216,12 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(currentFile);
         } else {
+            console.log('메시지 전송 시도:', messageText); // 디버깅용 로그
             socket.emit('sendMessage', messageText);
         }
 
-        input.value = '';
+        messageInput.value = '';
+        emojiPicker.style.display = 'none';
     }
 
     // 메시지 표시 함수
@@ -276,18 +301,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 이벤트 리스너 등록
-    sendButton.addEventListener('click', sendMessage);
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+    sendButton.addEventListener('click', () => {
+        sendMessage();
+    });
+
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // 기본 엔터 동작 방지
             sendMessage();
         }
     });
 
     // 소켓 이벤트 리스너
-    socket.on('message', displayMessage);
+    socket.on('message', (message) => {
+        console.log('메시지 수신:', message); // 디버깅용 로그
+        displayMessage(message);
+    });
+    socket.on('userJoined', displayMessage);
+    socket.on('userLeft', displayMessage);
     
     socket.on('userList', (users) => {
-        onlineCount.textContent = `${users.length} 온라인`;
+        onlineCount.textContent = `${users.size} 온라인`;
     });
 
     // 클릭 이벤트 처리 (이모티콘 패널 닫기)
