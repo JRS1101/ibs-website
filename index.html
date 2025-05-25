@@ -36,6 +36,20 @@
             <button class="emoji-button">
                 <i class="far fa-smile"></i>
             </button>
+            <div class="emoji-picker" style="display: none;">
+                <div class="emoji-tabs">
+                    <button class="emoji-tab active" data-tab="basic">기본</button>
+                    <button class="emoji-tab" data-tab="custom">캐릭터</button>
+                </div>
+                <div class="emoji-content" id="basicEmojis">
+                    <span>😊</span><span>😂</span><span>🥰</span><span>😍</span>
+                    <span>😎</span><span>😇</span><span>🤔</span><span>😅</span>
+                    <span>😭</span><span>😤</span><span>😡</span><span>🥺</span>
+                </div>
+                <div class="emoji-content" id="customEmojis" style="display: none;">
+                    <!-- 캐릭터 이모티콘들은 JavaScript에서 동적으로 추가됩니다 -->
+                </div>
+            </div>
             <button class="file-button">
                 <i class="fas fa-paperclip"></i>
             </button>
