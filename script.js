@@ -1,11 +1,14 @@
 // 서버 URL을 환경에 따라 설정
-const SERVER_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000' 
-    : 'https://your-server-url.herokuapp.com'; // 이 부분은 실제 서버 URL로 변경해야 합니다
+const SERVER_URL = 'https://jeialeseu-silsigan-caeting.onrender.com';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Socket.IO 연결 설정
     const socket = io(SERVER_URL, {
-        transports: ['websocket', 'polling']
+        transports: ['websocket'],
+        cors: {
+            origin: '*',
+            methods: ['GET', 'POST']
+        }
     });
     
     // DOM 요소
@@ -21,14 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let username = '';
 
-    // 연결 상태 처리
+    // 연결 상태 로깅
     socket.on('connect', () => {
         console.log('서버에 연결되었습니다.');
     });
 
     socket.on('connect_error', (error) => {
-        console.error('서버 연결 실패:', error);
-        alert('서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        console.error('연결 오류:', error);
     });
 
     // 입장 버튼 클릭
