@@ -164,10 +164,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // EmailJS 초기화
-    emailjs.init("0RQkQ9ZJxMmfL8e9m"); // 임시 Public Key (나중에 실제 계정으로 변경 필요)
+    // EmailJS 초기화 (실제 Public Key로 변경 필요)
+    // 사용법: https://www.emailjs.com/ 에서 계정 생성 후 설정
+    const EMAILJS_SERVICE_ID = 'service_ibs2024';  // EmailJS 서비스 ID
+    const EMAILJS_TEMPLATE_ID = 'template_ibs_contact'; // EmailJS 템플릿 ID
+    const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // EmailJS Public Key
+    
+    // EmailJS 초기화 (실제 사용 시 올바른 Public Key 입력 필요)
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
 
-    // 연락처 폼 처리 (간단한 mailto 방식)
+    // 연락처 폼 처리 (EmailJS로 실제 이메일 전송)
     const contactForm = document.getElementById('contactForm');
     
     if (contactForm) {
@@ -194,85 +202,142 @@ document.addEventListener('DOMContentLoaded', function() {
             // 전송 중 상태 표시
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = '이메일 프로그램 실행 중...';
+            submitBtn.textContent = '전송 중...';
             submitBtn.disabled = true;
 
-            // 이메일 링크 생성
-            const emailSubject = encodeURIComponent(`[I.B.S 문의] ${company} - ${name}님 문의사항`);
-            const emailBody = encodeURIComponent(`
-안녕하세요, I.B.S입니다.
+            // EmailJS로 이메일 전송
+            if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
+                // EmailJS 파라미터 설정
+                const templateParams = {
+                    from_name: name,
+                    from_email: email,
+                    company: company,
+                    message: message,
+                    to_email: 'ibs@ibs-info.com', // 받는 이메일
+                    reply_to: email
+                };
 
-아래와 같이 문의사항을 전달드립니다.
-
-=== 문의자 정보 ===
-• 이름: ${name}
-• 이메일: ${email}
-• 회사명: ${company}
-
-=== 문의내용 ===
-${message}
-
----
-본 문의는 I.B.S 웹사이트(web.ibs-info.com)를 통해 접수되었습니다.
-
-감사합니다.
-            `);
-            
-            const mailtoLink = `mailto:ibs@ibs-info.com?subject=${emailSubject}&body=${emailBody}`;
-            
-            // 이메일 클라이언트 열기
-            setTimeout(() => {
+                // EmailJS로 이메일 전송
+                emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+                    .then(function(response) {
+                        console.log('SUCCESS!', response.status, response.text);
+                        showNotification('문의가 성공적으로 전송되었습니다! 빠른 시일 내에 답변드리겠습니다.', 'success');
+                        
+                        // 폼 초기화
+                        contactForm.reset();
+                        
+                        // 라벨 위치 초기화
+                        const labels = contactForm.querySelectorAll('label');
+                        labels.forEach(label => {
+                            animateLabel(label, false);
+                        });
+                        
+                    }, function(error) {
+                        console.log('FAILED...', error);
+                        showNotification('전송에 실패했습니다. 직접 연락처로 문의해 주세요.', 'error');
+                        
+                        // 대체 방법: 직접 연락처 표시
+                        setTimeout(() => {
+                            showContactAlternative();
+                        }, 2000);
+                    })
+                    .finally(function() {
+                        // 버튼 상태 복원
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+            } else {
+                // EmailJS가 설정되지 않은 경우 mailto 방식 사용
+                const subject = encodeURIComponent(`[I.B.S 문의] ${company} - ${name}님 문의`);
+                const body = encodeURIComponent(
+                    `회사명: ${company}\n` +
+                    `이름: ${name}\n` +
+                    `이메일: ${email}\n\n` +
+                    `문의내용:\n${message}\n\n` +
+                    `---\n` +
+                    `이 메일은 I.B.S 웹사이트 문의 폼에서 발송되었습니다.`
+                );
+                
+                const mailtoLink = `mailto:ibs@ibs-info.com?subject=${subject}&body=${body}`;
+                
+                // 기본 이메일 클라이언트 열기
                 window.location.href = mailtoLink;
                 
-                showNotification('이메일 프로그램이 열렸습니다. 전송 버튼을 클릭해 주세요!', 'success');
+                showNotification('이메일 프로그램이 열립니다. 전송 버튼을 눌러주세요.', 'info');
                 
-                // 폼 초기화
-                this.reset();
+                // 버튼 상태 복원
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
                 
-                // 라벨 위치 초기화
-                const labels = this.querySelectorAll('label');
-                labels.forEach(label => {
-                    label.style.top = '1rem';
-                    label.style.fontSize = '1rem';
-                    label.style.color = 'var(--gray-500)';
-                });
+                // 대체 연락 방법 안내
+                setTimeout(() => {
+                    showContactAlternative();
+                }, 3000);
+            }
+        });
+    }
 
-                // 버튼 상태 복구
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }, 500);
+    // 폼 필드 이벤트 처리 추가
+    const formInputs = contactForm.querySelectorAll('input, textarea');
+    
+    formInputs.forEach(input => {
+        // 포커스 이벤트
+        input.addEventListener('focus', function() {
+            const label = this.nextElementSibling;
+            if (label && label.tagName === 'LABEL') {
+                animateLabel(label, true);
+            }
         });
         
-        // 폼 필드 이벤트 처리
-        const formInputs = contactForm.querySelectorAll('input, textarea');
+        // 블러 이벤트
+        input.addEventListener('blur', function() {
+            const label = this.nextElementSibling;
+            if (label && label.tagName === 'LABEL' && !this.value) {
+                animateLabel(label, false);
+            }
+        });
         
-        formInputs.forEach(input => {
-            // 포커스 이벤트
-            input.addEventListener('focus', function() {
-                const label = this.nextElementSibling;
-                if (label && label.tagName === 'LABEL') {
+        // 입력 이벤트
+        input.addEventListener('input', function() {
+            const label = this.nextElementSibling;
+            if (label && label.tagName === 'LABEL') {
+                if (this.value) {
                     animateLabel(label, true);
                 }
-            });
-            
-            // 블러 이벤트
-            input.addEventListener('blur', function() {
-                const label = this.nextElementSibling;
-                if (label && label.tagName === 'LABEL' && !this.value) {
-                    animateLabel(label, false);
-                }
-            });
-            
-            // 입력 이벤트
-            input.addEventListener('input', function() {
-                const label = this.nextElementSibling;
-                if (label && label.tagName === 'LABEL') {
-                    if (this.value) {
-                        animateLabel(label, true);
-                    }
-                }
-            });
+            }
         });
+    });
+
+    // 대체 연락 방법 안내 함수
+    function showContactAlternative() {
+        const alternativeHtml = `
+            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-top: 1rem; border: 1px solid #e2e8f0;">
+                <h4 style="color: #2563eb; margin-bottom: 1rem;">
+                    <i class="fas fa-phone"></i> 빠른 연락 방법
+                </h4>
+                <div style="display: grid; gap: 0.8rem;">
+                    <a href="tel:010-3664-6268" style="color: #2563eb; text-decoration: none; font-weight: 500;">
+                        📞 이준로 대표: 010-3664-6268
+                    </a>
+                    <a href="tel:010-8436-7006" style="color: #2563eb; text-decoration: none; font-weight: 500;">
+                        📞 강재모 이사: 010-8436-7006
+                    </a>
+                    <a href="mailto:ibs@ibs-info.com" style="color: #2563eb; text-decoration: none; font-weight: 500;">
+                        📧 ibs@ibs-info.com
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm && !contactForm.querySelector('.contact-alternative')) {
+            const altDiv = document.createElement('div');
+            altDiv.className = 'contact-alternative';
+            altDiv.innerHTML = alternativeHtml;
+            contactForm.appendChild(altDiv);
+        }
     }
 
     // 라벨 애니메이션

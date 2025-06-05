@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I.B.S 포트폴리오 프레젠테이션</title>
+    
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/theme/white.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        .reveal {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        .reveal .slides section {
+            text-align: left;
+        }
+        
+        .title-slide {
+            text-align: center !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .title-slide h1, .title-slide h2, .title-slide p {
+            color: white !important;
+        }
+        
+        .company-logo {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-info {
+            font-size: 1.2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-item {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #2563eb;
+        }
+        
+        .feature-item h4 {
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tech-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: rgba(37, 99, 235, 0.05);
+            border-radius: 8px;
+        }
+        
+        .tech-list li i {
+            color: #10b981;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .portfolio-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .portfolio-item h4 {
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        
+        .period {
+            color: #3b82f6;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .tag {
+            background: #e2e8f0;
+            color: #334155;
+            padding: 0.3rem 0.8rem;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 2rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .executive-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .executive-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .executive-card h4 {
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+        
+        .executive-card p {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .executive-card i {
+            color: #3b82f6;
+        }
+        
+        .print-friendly {
+            background: white !important;
+            color: black !important;
+        }
+        
+        @media print {
+            .reveal .slides section {
+                page-break-inside: avoid;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- 1. 표지 슬라이드 -->
+            <section class="title-slide">
+                <div class="company-logo">I.B.S</div>
+                <h2 class="subtitle">InnoBridge SOLUTION</h2>
+                <h3>반도체 PCB JIG 설계 전문기업</h3>
+                <p style="font-size: 1.3rem; margin: 2rem 0;">
+                    전문가 팀의 JIG 설계 혁신<br>
+                    설계부터 완제 제작까지 원스톱 서비스
+                </p>
+                <div class="contact-info">
+                    <p><i class="fas fa-phone"></i> 010-3664-6268 (이준로 대표)</p>
+                    <p><i class="fas fa-envelope"></i> ibs@ibs-info.com</p>
+                    <p><i class="fas fa-globe"></i> web.ibs-info.com</p>
+                </div>
+            </section>
+
+            <!-- 2. 회사 개요 -->
+            <section>
+                <h2><i class="fas fa-building"></i> 회사 개요</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4><i class="fas fa-target"></i> 비전</h4>
+                        <p>반도체 PCB JIG 설계 분야의 글로벌 리더</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-handshake"></i> 미션</h4>
+                        <p>혁신적인 기술 솔루션으로 고객 성공 지원</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-map-marker-alt"></i> 위치</h4>
+                        <p>수원시 장안구 덕영대로 417번길 52-5 502호</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-calendar"></i> 설립</h4>
+                        <p>2024년 (창업 초기 스타트업)</p>
+                    </div>
+                </div>
+                <p style="font-size: 1.1rem; margin-top: 2rem; line-height: 1.6;">
+                    I.B.S는 수원에 본사를 둔 혁신적인 기술 솔루션 회사로, 
+                    20년 이상의 JIG 설계 경험을 보유한 전문가팀이 고객에게 최적의 솔루션을 제공합니다.
+                </p>
+            </section>
+
+            <!-- 3. 경영진 소개 -->
+            <section>
+                <h2><i class="fas fa-users"></i> 경영진 소개</h2>
+                <div class="executive-grid">
+                    <div class="executive-card">
+                        <h4>이준로 대표이사</h4>
+                        <p><i class="fas fa-user-tie"></i> CEO (Chief Executive Officer)</p>
+                        <p><i class="fas fa-graduation-cap"></i> 공주대 영문학 전공</p>
+                        <p><i class="fas fa-briefcase"></i> 20년 JIG 설계 경력</p>
+                        <p><i class="fas fa-building"></i> 윌테크놀로지 7년8개월</p>
+                        <p><i class="fas fa-building"></i> 나노시스 2년2개월</p>
+                        <p><i class="fas fa-phone"></i> 010-3664-6268</p>
+                        <p><i class="fas fa-envelope"></i> jr.lee@ibs-info.com</p>
+                    </div>
+                    <div class="executive-card">
+                        <h4>강재모 이사</h4>
+                        <p><i class="fas fa-briefcase"></i> 이사 (Director)</p>
+                        <p><i class="fas fa-cogs"></i> 기술 개발 총괄</p>
+                        <p><i class="fas fa-project-diagram"></i> 프로젝트 관리 전문</p>
+                        <p><i class="fas fa-phone"></i> 010-8436-7006</p>
+                        <p><i class="fas fa-envelope"></i> jm.kang@ibs-info.com</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. 핵심 역량 -->
+            <section>
+                <h2><i class="fas fa-star"></i> 핵심 역량</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4><i class="fas fa-microchip"></i> Wire Probe JIG</h4>
+                        <p>설계부터 완제 제작까지, 20㎛, 25㎛, 30㎛ 통합 Structure 원스톱 서비스</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-cog"></i> MEMS JIG</h4>
+                        <p>세계 최초 전기검사 MEMS JIG 개발 경험</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-robot"></i> 프로세스 최적화</h4>
+                        <p>설계 공정 Process 자동화 개발 구축 기술</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-graduation-cap"></i> 교육 서비스</h4>
+                        <p>IG-Station, EZ-Cat, Cam350, AutoCAD 등 전문 교육</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. 주요 서비스 -->
+            <section>
+                <h2><i class="fas fa-cogs"></i> 주요 서비스</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="color: #2563eb; margin-bottom: 1rem;">
+                            <i class="fas fa-drafting-compass"></i> JIG 설계 및 완제 제작
+                        </h3>
+                        <ul class="tech-list">
+                            <li><i class="fas fa-check"></i> Wire Probe JIG 설계부터 완제 제작까지</li>
+                            <li><i class="fas fa-check"></i> 20㎛, 25㎛, 30㎛ 통합 Structure 제작</li>
+                            <li><i class="fas fa-check"></i> Agpdcu Probe 탑재 치공구 완제품</li>
+                            <li><i class="fas fa-check"></i> MEMS JIG 설계 및 제작</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: #2563eb; margin-bottom: 1rem;">
+                            <i class="fas fa-laptop-code"></i> 기술 컨설팅 & 교육
+                        </h3>
+                        <ul class="tech-list">
+                            <li><i class="fas fa-check"></i> 20년 노하우 기반 전문 컨설팅</li>
+                            <li><i class="fas fa-check"></i> 설계 최적화 및 프로세스 개선</li>
+                            <li><i class="fas fa-check"></i> IG-Station, EZ-Cat 실무 교육</li>
+                            <li><i class="fas fa-check"></i> Cam350, AutoCAD 활용법 전수</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. 기술력 & 통계 -->
+            <section>
+                <h2><i class="fas fa-chart-line"></i> 기술력 & 성과</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">년 경력</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">완료 프로젝트</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">소프트웨어 전문성</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">세계 최초 기술</div>
+                    </div>
+                </div>
+                <h3 style="color: #2563eb; margin: 2rem 0 1rem 0;">핵심 기술</h3>
+                <ul class="tech-list">
+                    <li><i class="fas fa-check-circle"></i> Wire Probe JIG 설계부터 완제 제작 기술</li>
+                    <li><i class="fas fa-check-circle"></i> MEMS 전기검사 JIG 기술</li>
+                    <li><i class="fas fa-check-circle"></i> 30um 초정밀 Probe 기술</li>
+                    <li><i class="fas fa-check-circle"></i> 설계 프로세스 자동화 기술</li>
+                </ul>
+            </section>
+
+            <!-- 7. 포트폴리오 1 - MEMS JIG -->
+            <section>
+                <h2><i class="fas fa-project-diagram"></i> 주요 프로젝트 1</h2>
+                <div class="portfolio-item">
+                    <h4>MEMS JIG 개발</h4>
+                    <div class="period">2020.01 ~ 2022.07</div>
+                    <p><strong>세계 최초 전기검사 MEMS JIG 개발</strong></p>
+                    <ul style="margin: 1rem 0;">
+                        <li>세계 최초 전기검사 MEMS JIG 개발</li>
+                        <li>삼성전기 납품 상용화</li>
+                        <li>차세대 MEMS JIG 개발 중</li>
+                    </ul>
+                    <div class="tags">
+                        <span class="tag">세계최초</span>
+                        <span class="tag">MEMS</span>
+                        <span class="tag">전기검사</span>
+                        <span class="tag">삼성전기</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. 포트폴리오 2 - Wire Probe JIG -->
+            <section>
+                <h2><i class="fas fa-project-diagram"></i> 주요 프로젝트 2</h2>
+                <div class="portfolio-item">
+                    <h4>Wire Probe JIG 설계 및 제작</h4>
+                    <div class="period">2024.01 ~ 2025.02</div>
+                    <p><strong>20㎛, 25㎛, 30㎛ 통합 Structure 설계부터 완제 제작까지</strong></p>
+                    <ul style="margin: 1rem 0;">
+                        <li>전장 10mm 통합 구동 Structure 완제품 개발</li>
+                        <li>25,30㎛ 삼성전기 승인 완료</li>
+                        <li>설계부터 제작까지 원스톱 서비스 구축</li>
+                        <li>업계 표준 기술로 인정</li>
+                    </ul>
+                    <div class="tags">
+                        <span class="tag">삼성전기</span>
+                        <span class="tag">Wire Probe</span>
+                        <span class="tag">완제 제작</span>
+                        <span class="tag">통합 Structure</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. 포트폴리오 3 - 30um Probe -->
+            <section>
+                <h2><i class="fas fa-project-diagram"></i> 주요 프로젝트 3</h2>
+                <div class="portfolio-item">
+                    <h4>30um Probe JIG 개발</h4>
+                    <div class="period">2021.01 ~ 2021.12</div>
+                    <p><strong>Agpdcu Probe 탑재 치공구 개발</strong></p>
+                    <ul style="margin: 1rem 0;">
+                        <li>Agpdcu Probe 탑재 치공구 개발</li>
+                        <li>Rew Pin 개발 탑재 치공구 상용화</li>
+                        <li>높은 정밀도 구현</li>
+                    </ul>
+                    <div class="tags">
+                        <span class="tag">30um Probe</span>
+                        <span class="tag">Agpdcu</span>
+                        <span class="tag">상용화</span>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <h4>설계 공정 Process 자동화 개발</h4>
+                    <div class="period">2023.01 ~ 진행중</div>
+                    <p><strong>고객사 맞춤형 설계 프로세스 최적화</strong></p>
+                    <ul style="margin: 1rem 0;">
+                        <li>다양한 설계 소프트웨어 도구 활용 전문성</li>
+                        <li>IG-Station, EZ-Cat, Cam350, AutoCAD 등 교육</li>
+                        <li>고객사 엔지니어 대상 맞춤형 교육 프로그램</li>
+                    </ul>
+                    <div class="tags">
+                        <span class="tag">소프트웨어 교육</span>
+                        <span class="tag">프로세스 개선</span>
+                        <span class="tag">고객 지원</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. 경쟁 우위 -->
+            <section>
+                <h2><i class="fas fa-trophy"></i> 경쟁 우위</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4><i class="fas fa-medal"></i> 세계 최초 기술</h4>
+                        <p>MEMS 전기검사 JIG 세계 최초 개발 및 상용화</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-handshake"></i> 검증된 파트너십</h4>
+                        <p>삼성전기 공급업체 승인 및 지속적 협력</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-tools"></i> 원스톱 서비스</h4>
+                        <p>설계부터 완제 제작까지 종합 솔루션</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4><i class="fas fa-graduation-cap"></i> 전문 교육</h4>
+                        <p>고객사 역량 강화를 위한 맞춤형 교육</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. 연락처 & 문의 -->
+            <section>
+                <h2><i class="fas fa-phone"></i> 연락처 & 문의</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 2rem 0;">
+                    <div>
+                        <h3 style="color: #2563eb; margin-bottom: 1rem;">회사 정보</h3>
+                        <p style="margin: 0.8rem 0; display: flex; align-items: center; gap: 0.8rem;">
+                            <i class="fas fa-building" style="color: #3b82f6; width: 20px;"></i>
+                            <strong>I.B.S (InnoBridge SOLUTION)</strong>
+                        </p>
+                        <p style="margin: 0.8rem 0; display: flex; align-items: center; gap: 0.8rem;">
+                            <i class="fas fa-map-marker-alt" style="color: #3b82f6; width: 20px;"></i>
+                            수원시 장안구 덕영대로 417번길 52-5 502호
+                        </p>
+                        <p style="margin: 0.8rem 0; display: flex; align-items: center; gap: 0.8rem;">
+                            <i class="fas fa-envelope" style="color: #3b82f6; width: 20px;"></i>
+                            ibs@ibs-info.com
+                        </p>
+                        <p style="margin: 0.8rem 0; display: flex; align-items: center; gap: 0.8rem;">
+                            <i class="fas fa-globe" style="color: #3b82f6; width: 20px;"></i>
+                            web.ibs-info.com
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="color: #2563eb; margin-bottom: 1rem;">담당자 연락처</h3>
+                        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                            <h4 style="color: #2563eb; margin-bottom: 0.8rem;">이준로 대표이사</h4>
+                            <p style="margin: 0.5rem 0;">📞 010-3664-6268</p>
+                            <p style="margin: 0.5rem 0;">📧 jr.lee@ibs-info.com</p>
+                        </div>
+                        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px;">
+                            <h4 style="color: #2563eb; margin-bottom: 0.8rem;">강재모 이사</h4>
+                            <p style="margin: 0.5rem 0;">📞 010-8436-7006</p>
+                            <p style="margin: 0.5rem 0;">📧 jm.kang@ibs-info.com</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. 감사 슬라이드 -->
+            <section class="title-slide">
+                <h1>감사합니다</h1>
+                <h2 style="margin: 2rem 0;">I.B.S와 함께 기술 혁신을 시작하세요</h2>
+                <div style="font-size: 1.3rem;">
+                    <p><i class="fas fa-phone"></i> 010-3664-6268</p>
+                    <p><i class="fas fa-envelope"></i> ibs@ibs-info.com</p>
+                    <p><i class="fas fa-globe"></i> web.ibs-info.com</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            center: false,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            
+            // PDF 출력을 위한 설정
+            width: 1200,
+            height: 700,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            // 키보드 단축키
+            keyboard: {
+                80: function() { // P 키로 인쇄 모드
+                    window.print();
+                }
+            }
+        });
+        
+        // PDF 출력 최적화
+        if (window.location.search.match(/print-pdf/gi)) {
+            document.body.classList.add('print-friendly');
+        }
+    </script>
+</body>
+</html> 
