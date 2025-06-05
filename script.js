@@ -321,9 +321,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a href="tel:010-3664-6268" style="color: #2563eb; text-decoration: none; font-weight: 500;">
                         📞 이준로 대표: 010-3664-6268
                     </a>
-                    <a href="tel:010-8436-7006" style="color: #2563eb; text-decoration: none; font-weight: 500;">
-                        📞 강재모 이사: 010-8436-7006
-                    </a>
                     <a href="mailto:ibs@ibs-info.com" style="color: #2563eb; text-decoration: none; font-weight: 500;">
                         📧 ibs@ibs-info.com
                     </a>

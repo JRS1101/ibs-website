@@ -462,6 +462,18 @@ section {
     width: 16px;
 }
 
+.executive-details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.executive-details p {
+    margin: 8px 0;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+}
+
 /* Services Section */
 .services {
     background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
