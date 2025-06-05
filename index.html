@@ -3,73 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 채팅</title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <title>I.B.S - 반도체 PCB JIG 설계 전문기업</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="login-container" id="loginContainer">
-        <div class="login-box">
-            <h2>채팅 입장</h2>
-            <div class="profile-upload">
-                <img id="profilePreview" src="https://via.placeholder.com/100" alt="프로필">
-                <input type="file" id="profileUpload" accept="image/*">
-                <label for="profileUpload">프로필 사진 선택</label>
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>I.B.S</h2>
+                <span>InnoBridge SOLUTION</span>
             </div>
-            <input type="text" id="usernameInput" placeholder="닉네임을 입력하세요" maxlength="10">
-            <button id="joinButton">입장하기</button>
+            <ul class="nav-menu">
+                <li><a href="#home">홈</a></li>
+                <li><a href="#about">회사소개</a></li>
+                <li><a href="#services">서비스</a></li>
+                <li><a href="#portfolio">포트폴리오</a></li>
+                <li><a href="#contact">문의</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <div class="chat-container" id="chatContainer" style="display: none;">
-        <div class="chat-header">
-            <h2>채팅방</h2>
-            <div class="online-count">
-                <i class="fas fa-users"></i>
-                <span id="onlineCount">0 온라인</span>
-            </div>
-        </div>
-        <div class="chat-messages">
-        </div>
-        <div class="chat-input">
-            <button class="emoji-button">
-                <i class="far fa-smile"></i>
-            </button>
-            <div class="emoji-picker" style="display: none;">
-                <div class="emoji-tabs">
-                    <button class="emoji-tab active" data-tab="basic">기본</button>
-                    <button class="emoji-tab" data-tab="custom">캐릭터</button>
-                </div>
-                <div class="emoji-content" id="basicEmojis">
-                    <span>😊</span><span>😂</span><span>🥰</span><span>😍</span>
-                    <span>😎</span><span>😇</span><span>🤔</span><span>😅</span>
-                    <span>😭</span><span>😤</span><span>😡</span><span>🥺</span>
-                </div>
-                <div class="emoji-content" id="customEmojis" style="display: none;">
-                    <!-- 캐릭터 이모티콘들은 JavaScript에서 동적으로 추가됩니다 -->
+    <!-- 메인 섹션 -->
+    <section id="home" class="hero">
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>전문가 팀의 JIG 설계 혁신</h1>
+                <p>
+                    반도체 PCB JIG 설계 분야의 전문가들이 만들어가는<br>
+                    혁신적인 기술 솔루션과 차별화된 서비스
+                </p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn-primary">문의하기</a>
+                    <a href="#portfolio" class="btn-secondary">프로젝트 보기</a>
                 </div>
             </div>
-            <button class="file-button">
-                <i class="fas fa-paperclip"></i>
-            </button>
-            <input type="file" id="fileUpload" accept="image/*,application/pdf" style="display: none;">
-            <div class="file-preview" style="display: none;">
-                <div class="preview-content">
-                    <img id="imagePreview" style="display: none;">
-                    <div id="fileInfo" style="display: none;"></div>
+            <div class="hero-image">
+                <div class="floating-element">
+                    <i class="fas fa-microchip"></i>
                 </div>
-                <button class="cancel-upload">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div class="floating-element">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="floating-element">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="floating-element">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
             </div>
-            <input type="text" placeholder="메시지를 입력하세요...">
-            <button class="send-button">
-                <i class="fas fa-paper-plane"></i>
-            </button>
         </div>
-    </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <h3>20+</h3>
+                <p>년 경력</p>
+            </div>
+            <div class="stat">
+                <h3>100+</h3>
+                <p>프로젝트</p>
+            </div>
+            <div class="stat">
+                <h3>세계최초</h3>
+                <p>MEMS JIG 개발</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 회사소개 섹션 -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>I.B.S 소개</h2>
+                <p>InnoBridge SOLUTION - 혁신적인 기술 솔루션 파트너</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>전문가 팀과 함께하는 기술 혁신</h3>
+                    <p>I.B.S(InnoBridge SOLUTION)는 반도체 PCB JIG 설계 분야의 전문 기업입니다. 수원에 본사를 둔 혁신적인 기술 솔루션 회사로, 경험 많은 전문가팀이 고객에게 최적의 솔루션을 제공합니다.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-microchip"></i>
+                            <h4>반도체 Test Wire Probe JIG</h4>
+                            <p>20㎛, 25㎛, 30㎛ 통합 Structure 개발 전문</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-cog"></i>
+                            <h4>MEMS JIG 개발</h4>
+                            <p>세계 최초 전기검사 MEMS JIG 개발 경험</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-robot"></i>
+                            <h4>설계 공정 Process 최적화</h4>
+                            <p>전문 소프트웨어 도구를 활용한 설계 효율성 극대화</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h4>설계 소프트웨어 교육</h4>
+                            <p>IG-Station, EZ-Cat, Cam350, AutoCAD 등 전문 교육</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="card">
+                        <h4>경영진 소개</h4>
+                        <div class="profile-info">
+                            <div class="executive-member">
+                                <h5>이준로 대표이사</h5>
+                                <p><i class="fas fa-user-tie"></i> CEO (Chief Executive Officer)</p>
+                                <p><i class="fas fa-phone"></i> 010-3664-6268</p>
+                                <p><i class="fas fa-envelope"></i> jr.lee@ibs-info.com</p>
+                            </div>
+                            <div class="executive-member">
+                                <h5>강재모 이사</h5>
+                                <p><i class="fas fa-briefcase"></i> 이사 (Director)</p>
+                                <p><i class="fas fa-phone"></i> 010-8436-7006</p>
+                                <p><i class="fas fa-envelope"></i> jm.kang@ibs-info.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 서비스 섹션 -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>전문 서비스</h2>
+                <p>고객의 기술향상을 위한 맞춤형 솔루션</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-drafting-compass"></i>
+                    </div>
+                    <h3>JIG 설계 및 개발</h3>
+                    <p>Wire Probe JIG, MEMS JIG 등 다양한 반도체 테스트 JIG 설계 및 개발</p>
+                    <ul>
+                        <li>20㎛, 25㎛, 30㎛ 통합 Structure</li>
+                        <li>전장 10mm 통합 구동 Structure</li>
+                        <li>Agpdcu Probe 탑재 치공구</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>기술 컨설팅</h3>
+                    <p>20년 노하우를 바탕으로 한 전문 기술 컨설팅 서비스</p>
+                    <ul>
+                        <li>설계 최적화 컨설팅</li>
+                        <li>프로세스 개선 방안 제시</li>
+                        <li>비용 절감 솔루션</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>설계 프로세스 최적화</h3>
+                    <p>전문 소프트웨어 도구를 활용한 설계 프로세스 혁신</p>
+                    <ul>
+                        <li>IG-Station, EZ-Cat 활용 최적화</li>
+                        <li>Cam350, AutoCAD 전문 기술</li>
+                        <li>Cammaster 등 다양한 CAD/CAM 도구</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>설계 소프트웨어 교육</h3>
+                    <p>고객사 엔지니어 대상 전문 소프트웨어 교육 서비스</p>
+                    <ul>
+                        <li>IG-Station, EZ-Cat 실무 교육</li>
+                        <li>Cam350, AutoCAD 활용법 전수</li>
+                        <li>Cammaster 등 맞춤형 교육 커리큘럼</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 포트폴리오 섹션 -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2>주요 프로젝트</h2>
+                <p>혁신적인 JIG 설계 프로젝트들</p>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-info">
+                        <h3>MEMS JIG 개발</h3>
+                        <p class="period">2020.01 ~ 2022.07</p>
+                        <p>세계 최초 전기검사 MEMS JIG 개발</p>
+                        <ul>
+                            <li>세계 최초 전기검사 MEMS JIG 개발</li>
+                            <li>삼성전기 납품 상용화</li>
+                            <li>차세대 MEMS JIG 개발 중</li>
+                        </ul>
+                        <div class="portfolio-tags">
+                            <span>세계최초</span>
+                            <span>MEMS</span>
+                            <span>전기검사</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-info">
+                        <h3>30um Probe JIG 개발</h3>
+                        <p class="period">2021.01 ~ 2021.12</p>
+                        <p>Agpdcu Probe 탑재 치공구 개발</p>
+                        <ul>
+                            <li>Agpdcu Probe 탑재 치공구 개발</li>
+                            <li>Rew Pin 개발 탑재 치공구 상용화</li>
+                            <li>높은 정밀도 구현</li>
+                        </ul>
+                        <div class="portfolio-tags">
+                            <span>30um Probe</span>
+                            <span>Agpdcu</span>
+                            <span>상용화</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-info">
+                        <h3>설계 공정 Process 자동화 개발</h3>
+                        <p class="period">2023.01 ~ 진행중</p>
+                        <p>고객사 맞춤형 설계 프로세스 최적화</p>
+                        <ul>
+                            <li>다양한 설계 소프트웨어 도구 활용 전문성</li>
+                            <li>IG-Station, EZ-Cat, Cam350, AutoCAD 등 교육</li>
+                            <li>고객사 엔지니어 대상 맞춤형 교육 프로그램</li>
+                        </ul>
+                        <div class="portfolio-tags">
+                            <span>소프트웨어 교육</span>
+                            <span>프로세스 개선</span>
+                            <span>고객 지원</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-info">
+                        <h3>Wire Probe JIG 개발</h3>
+                        <p class="period">2024.01 ~ 2025.02</p>
+                        <p>20㎛, 25㎛, 30㎛ 통합 Structure 개발</p>
+                        <ul>
+                            <li>전장 10mm 통합 구동 Structure 개발</li>
+                            <li>25,30㎛ 삼성전기 승인 완료</li>
+                            <li>업계 표준 기술로 인정</li>
+                        </ul>
+                        <div class="portfolio-tags">
+                            <span>삼성전기</span>
+                            <span>Wire Probe</span>
+                            <span>통합 Structure</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-info">
+                        <h3>설계 소프트웨어 교육 시스템</h3>
+                        <p class="period">2024.01 ~ 진행중</p>
+                        <p>고객사 역량 강화를 위한 전문 교육 서비스</p>
+                        <ul>
+                            <li>IG-Station, EZ-Cat, Cam350 전문 교육</li>
+                            <li>AutoCAD, Cammaster 활용 기술 전수</li>
+                            <li>실무 중심 맞춤형 교육 커리큘럼</li>
+                        </ul>
+                        <div class="portfolio-tags">
+                            <span>교육 서비스</span>
+                            <span>소프트웨어 전문성</span>
+                            <span>역량 강화</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 연락처 섹션 -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>문의하기</h2>
+                <p>I.B.S와 함께 기술 혁신을 시작하세요</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>주소</h4>
+                        <p>수원시 장안구 덕영대로 417번길 52-5 502호</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <h4>연락처</h4>
+                        <p>이준로 대표: 010-3664-6268</p>
+                        <p>강재모 이사: 010-8436-7006</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <h4>이메일</h4>
+                        <p>회사 대표: ibs@ibs-info.com</p>
+                        <p>이준로 대표: jr.lee@ibs-info.com</p>
+                        <p>강재모 이사: jm.kang@ibs-info.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-globe"></i>
+                        <h4>웹사이트</h4>
+                        <p>web.ibs-info.com</p>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" required>
+                            <label for="name">이름</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" required>
+                            <label for="email">이메일</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="company" required>
+                            <label for="company">회사명</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" required></textarea>
+                            <label for="message">문의내용</label>
+                        </div>
+                        <button type="submit" class="btn-primary">문의 보내기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>I.B.S</h3>
+                    <p>InnoBridge SOLUTION</p>
+                    <p>Professional JIG Design Team</p>
+                </div>
+                <div class="footer-contact">
+                    <h4>연락처</h4>
+                    <p>대표: 이준로 (010-3664-6268)</p>
+                    <p>이사: 강재모 (010-8436-7006)</p>
+                    <p>ibs@ibs-info.com</p>
+                </div>
+                <div class="footer-services">
+                    <h4>전문 분야</h4>
+                    <p>반도체 Test Wire Probe JIG</p>
+                    <p>MEMS JIG 개발</p>
+                    <p>설계 공정 Process 최적화</p>
+                    <p>설계 소프트웨어 교육</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 InnoBridge SOLUTION. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html> 
