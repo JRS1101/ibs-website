@@ -10,6 +10,13 @@ document.addEventListener('DOMContentLoaded', function() {
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
         
+        // body 스크롤 제어 (모바일에서 메뉴 열릴 때)
+        if (navMenu.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        
         // 햄버거 아이콘 애니메이션
         const spans = hamburger.querySelectorAll('span');
         spans.forEach((span, index) => {
@@ -29,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', () => {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
+            document.body.style.overflow = '';
             
             const spans = hamburger.querySelectorAll('span');
             spans.forEach(span => {
@@ -38,11 +46,44 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // 모바일에서 외부 클릭 시 메뉴 닫기
+    document.addEventListener('click', function(e) {
+        if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+            if (navMenu.classList.contains('active')) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                const spans = hamburger.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.transform = 'none';
+                    span.style.opacity = '1';
+                });
+            }
+        }
+    });
+
+    // 화면 크기 변경 시 메뉴 상태 초기화
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            const spans = hamburger.querySelectorAll('span');
+            spans.forEach(span => {
+                span.style.transform = 'none';
+                span.style.opacity = '1';
+            });
+        }
+    });
+
     // 스크롤 시 네비게이션 스타일 변경
     let lastScroll = 0;
     const navbar = document.querySelector('.navbar');
+    let ticking = false;
 
-    window.addEventListener('scroll', () => {
+    function updateNavbar() {
         const currentScroll = window.pageYOffset;
         
         if (currentScroll > 100) {
@@ -57,6 +98,14 @@ document.addEventListener('DOMContentLoaded', function() {
         observeElements();
         
         lastScroll = currentScroll;
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(updateNavbar);
+            ticking = true;
+        }
     });
 
     // 스크롤 애니메이션
@@ -65,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         animateElements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
-            const elementVisible = 150;
+            const elementVisible = window.innerHeight * 0.8; // 모바일에서 더 빨리 나타나도록
             
             if (elementTop < window.innerHeight - elementVisible) {
                 element.classList.add('fade-in-up');
@@ -73,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 부드러운 스크롤
+    // 부드러운 스크롤 (모바일 최적화)
     const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
     
     smoothScrollLinks.forEach(link => {
@@ -84,8 +133,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
-                const offsetTop = targetSection.offsetTop - 80; // 네비게이션 높이 고려
+                const navbar = document.querySelector('.navbar');
+                const navbarHeight = navbar ? navbar.offsetHeight : 80;
+                const offsetTop = targetSection.offsetTop - navbarHeight;
                 
+                // 모바일에서 더 부드러운 스크롤
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
@@ -93,6 +145,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // 터치 이벤트 최적화 (모바일)
+    if ('ontouchstart' in window) {
+        // 터치 가능한 요소들에 터치 피드백 추가
+        const touchElements = document.querySelectorAll('.btn-primary, .btn-secondary, .service-card, .portfolio-item, .contact-item');
+        
+        touchElements.forEach(element => {
+            element.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            element.addEventListener('touchend', function() {
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    }
 
     // 연락처 폼 처리
     const contactForm = document.getElementById('contactForm');
