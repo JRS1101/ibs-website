@@ -330,7 +330,23 @@ section {
 
 /* About Section */
 .about {
-    background: var(--light-bg);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.about::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+        linear-gradient(45deg, transparent 49%, rgba(37, 99, 235, 0.01) 50%, transparent 51%);
+    background-size: 100px 100px, 100px 100px, 20px 20px;
 }
 
 .about-content {
@@ -447,6 +463,33 @@ section {
 }
 
 /* Services Section */
+.services {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.services::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.04) 0%, transparent 50%);
+    background-size: 200px 200px;
+    animation: float-background 20s ease-in-out infinite;
+}
+
+@keyframes float-background {
+    0%, 100% { transform: translateX(0px) translateY(0px); }
+    25% { transform: translateX(10px) translateY(-10px); }
+    50% { transform: translateX(-5px) translateY(10px); }
+    75% { transform: translateX(-10px) translateY(-5px); }
+}
+
 .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -520,7 +563,27 @@ section {
 
 /* Portfolio Section */
 .portfolio {
-    background: var(--light-bg);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(37, 99, 235, 0.01) 10px,
+            rgba(37, 99, 235, 0.01) 20px
+        ),
+        radial-gradient(circle at 30% 70%, rgba(37, 99, 235, 0.02) 0%, transparent 50%);
 }
 
 .portfolio-grid {
@@ -603,6 +666,33 @@ section {
 }
 
 /* Contact Section */
+.contact {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        linear-gradient(45deg, transparent 49%, rgba(255, 255, 255, 0.01) 50%, transparent 51%);
+    background-size: 150px 150px, 150px 150px, 30px 30px;
+}
+
+.contact .section-header h2,
+.contact .section-header p {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .contact-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -620,37 +710,45 @@ section {
     align-items: center;
     gap: 1rem;
     padding: 1.5rem;
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .contact-item:hover {
     transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .contact-item i {
     font-size: 1.5rem;
-    color: var(--primary-color);
+    color: #60a5fa;
     width: 30px;
     text-align: center;
 }
 
 .contact-item h4 {
-    color: var(--text-color);
+    color: white;
     margin-bottom: 0.3rem;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .contact-item p {
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.9);
     margin: 0;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Contact Form */
 .contact-form {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 2.5rem;
     border-radius: 16px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
@@ -1201,4 +1299,172 @@ html {
         font-size: 2.5rem;
         white-space: normal;
     }
+}
+
+/* 기술적 느낌의 추가 패턴 */
+.tech-pattern {
+    position: relative;
+}
+
+.tech-pattern::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(90deg, transparent 50%, rgba(37, 99, 235, 0.02) 50%),
+        linear-gradient(0deg, transparent 50%, rgba(37, 99, 235, 0.02) 50%);
+    background-size: 40px 40px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Technology Section */
+.technology {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.technology::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 15% 25%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(37, 99, 235, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.tech-category {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.tech-category::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+.tech-category:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.tech-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.tech-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.tech-category h3 {
+    color: var(--text-color);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.tech-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tech-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: rgba(37, 99, 235, 0.05);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.tech-list li:hover {
+    background: rgba(37, 99, 235, 0.1);
+    transform: translateX(5px);
+}
+
+.tech-list li i {
+    color: var(--success-color);
+    margin-right: 1rem;
+    font-size: 1.1rem;
+}
+
+.tech-list li span {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    color: var(--gray-600);
+    font-size: 1.1rem;
+    font-weight: 500;
 } 
