@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- EmailJS 라이브러리 -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
     <!-- 네비게이션 -->
@@ -333,6 +336,32 @@
                     </div>
                 </div>
                 <div class="contact-form">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">
+                        <i class="fas fa-envelope"></i> 문의 방법
+                    </h3>
+                    
+                    <!-- 직접 연락 정보 -->
+                    <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
+                        <h4 style="color: var(--text-color); margin-bottom: 1rem;">
+                            <i class="fas fa-phone"></i> 직접 연락하기 (빠른 응답)
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                            <a href="tel:010-3664-6268" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">
+                                📞 이준로 대표: 010-3664-6268
+                            </a>
+                            <a href="tel:010-8436-7006" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">
+                                📞 강재모 이사: 010-8436-7006  
+                            </a>
+                            <a href="mailto:ibs@ibs-info.com" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">
+                                📧 ibs@ibs-info.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 온라인 문의 폼 -->
+                    <h4 style="color: var(--text-color); margin-bottom: 1rem; text-align: center;">
+                        <i class="fas fa-edit"></i> 온라인 문의 폼
+                    </h4>
                     <form id="contactForm">
                         <div class="form-group">
                             <input type="text" id="name" required>
@@ -351,6 +380,10 @@
                             <label for="message">문의내용</label>
                         </div>
                         <button type="submit" class="btn-primary">문의 보내기</button>
+                        <p style="font-size: 0.85rem; color: var(--gray-600); text-align: center; margin-top: 1rem;">
+                            * 문의 폼 전송 시 이메일 프로그램이 열립니다<br>
+                            * 빠른 응답을 원하시면 위의 전화번호로 직접 연락해 주세요
+                        </p>
                     </form>
                 </div>
             </div>

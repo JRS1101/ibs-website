@@ -164,7 +164,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 연락처 폼 처리
+    // EmailJS 초기화
+    emailjs.init("0RQkQ9ZJxMmfL8e9m"); // 임시 Public Key (나중에 실제 계정으로 변경 필요)
+
+    // 연락처 폼 처리 (간단한 mailto 방식)
     const contactForm = document.getElementById('contactForm');
     
     if (contactForm) {
@@ -172,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             // 폼 데이터 수집
-            const formData = new FormData(this);
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const company = document.getElementById('company').value;
@@ -188,19 +190,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('올바른 이메일 주소를 입력해주세요.', 'error');
                 return;
             }
-            
-            // 이메일 링크 생성 (실제 서버 없이 이메일 클라이언트로 전송)
-            const emailSubject = encodeURIComponent(`I.B.S 문의 - ${company}에서 ${name}님`);
+
+            // 전송 중 상태 표시
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '이메일 프로그램 실행 중...';
+            submitBtn.disabled = true;
+
+            // 이메일 링크 생성
+            const emailSubject = encodeURIComponent(`[I.B.S 문의] ${company} - ${name}님 문의사항`);
             const emailBody = encodeURIComponent(`
-안녕하세요 I.B.S입니다.
+안녕하세요, I.B.S입니다.
 
-문의자 정보:
-- 이름: ${name}
-- 이메일: ${email}
-- 회사명: ${company}
+아래와 같이 문의사항을 전달드립니다.
 
-문의내용:
+=== 문의자 정보 ===
+• 이름: ${name}
+• 이메일: ${email}
+• 회사명: ${company}
+
+=== 문의내용 ===
 ${message}
+
+---
+본 문의는 I.B.S 웹사이트(web.ibs-info.com)를 통해 접수되었습니다.
 
 감사합니다.
             `);
@@ -208,21 +221,26 @@ ${message}
             const mailtoLink = `mailto:ibs@ibs-info.com?subject=${emailSubject}&body=${emailBody}`;
             
             // 이메일 클라이언트 열기
-            window.location.href = mailtoLink;
-            
-            // 성공 메시지
-            showNotification('문의가 성공적으로 전송되었습니다!', 'success');
-            
-            // 폼 초기화
-            this.reset();
-            
-            // 라벨 위치 초기화
-            const labels = this.querySelectorAll('label');
-            labels.forEach(label => {
-                label.style.top = '1rem';
-                label.style.fontSize = '1rem';
-                label.style.color = 'var(--gray-500)';
-            });
+            setTimeout(() => {
+                window.location.href = mailtoLink;
+                
+                showNotification('이메일 프로그램이 열렸습니다. 전송 버튼을 클릭해 주세요!', 'success');
+                
+                // 폼 초기화
+                this.reset();
+                
+                // 라벨 위치 초기화
+                const labels = this.querySelectorAll('label');
+                labels.forEach(label => {
+                    label.style.top = '1rem';
+                    label.style.fontSize = '1rem';
+                    label.style.color = 'var(--gray-500)';
+                });
+
+                // 버튼 상태 복구
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 500);
         });
         
         // 폼 필드 이벤트 처리
