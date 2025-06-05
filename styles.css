@@ -740,6 +740,12 @@ section {
     color: #60a5fa;
     width: 30px;
     text-align: center;
+    flex-shrink: 0;
+}
+
+.contact-item-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .contact-item h4 {
@@ -754,6 +760,8 @@ section {
     margin: 0;
     font-weight: 500;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-size: 0.95rem;
+    line-height: 1.4;
 }
 
 /* Contact Form */
