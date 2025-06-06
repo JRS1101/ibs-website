@@ -183,71 +183,47 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Google Sheets에 데이터 저장 함수
-    async function saveToGoogleSheets(formData) {
+    async function sendToGoogleSheets(formData) {
         try {
-            // 일단 로컬에서 문의 데이터 저장 (콘솔 출력)
-            const inquiryData = {
-                timestamp: new Date().toLocaleString('ko-KR'),
-                name: formData.name,
-                email: formData.email,
-                company: formData.company,
-                message: formData.message
-            };
+            console.log('📊 Google Sheets로 데이터 전송 시작...');
             
-            console.log('=== I.B.S 새 문의 접수 ===');
-            console.log('접수시간:', inquiryData.timestamp);
-            console.log('이름:', inquiryData.name);
-            console.log('이메일:', inquiryData.email);
-            console.log('회사:', inquiryData.company);
-            console.log('문의내용:', inquiryData.message);
-            console.log('========================');
+            // Form submit 방식으로 CORS 우회
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = GOOGLE_SHEETS_URL;
+            form.target = 'hidden_iframe';
+            form.style.display = 'none';
             
-            // 로컬 스토리지에도 저장 (임시)
-            const existingInquiries = JSON.parse(localStorage.getItem('ibs_inquiries') || '[]');
-            existingInquiries.push(inquiryData);
-            localStorage.setItem('ibs_inquiries', JSON.stringify(existingInquiries));
-            console.log('로컬 스토리지에 저장됨. 총', existingInquiries.length, '건의 문의');
+            // JSON 데이터를 hidden input으로 추가
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(formData);
+            form.appendChild(input);
             
-            // Google Sheets URL이 설정되었다면 실제 전송 시도
-            if (GOOGLE_SHEETS_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec') {
-                const response = await fetch(GOOGLE_SHEETS_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'addInquiry',
-                        data: inquiryData
-                    })
-                });
-                
-                const result = await response.text();
-                console.log('Google Sheets 저장 결과:', result);
+            // Hidden iframe 생성 (응답 받기용)
+            let iframe = document.getElementById('hidden_iframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'hidden_iframe';
+                iframe.name = 'hidden_iframe';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
             }
             
-            return true;
+            // Form을 DOM에 추가하고 submit
+            document.body.appendChild(form);
+            form.submit();
+            
+            // Form 제거
+            document.body.removeChild(form);
+            
+            console.log('✅ Google Sheets 전송 완료');
+            return { success: true };
+            
         } catch (error) {
-            console.error('문의 저장 실패:', error);
-            
-            // 에러가 발생해도 로컬에는 저장 시도
-            try {
-                const inquiryData = {
-                    timestamp: new Date().toLocaleString('ko-KR'),
-                    name: formData.name,
-                    email: formData.email,
-                    company: formData.company,
-                    message: formData.message
-                };
-                
-                const existingInquiries = JSON.parse(localStorage.getItem('ibs_inquiries') || '[]');
-                existingInquiries.push(inquiryData);
-                localStorage.setItem('ibs_inquiries', JSON.stringify(existingInquiries));
-                console.log('로컬 스토리지에 백업 저장됨');
-                return true;
-            } catch (localError) {
-                console.error('로컬 저장도 실패:', localError);
-                return false;
-            }
+            console.error('❌ Google Sheets 전송 실패:', error);
+            throw error;
         }
     }
 
@@ -285,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = { name, email, company, message };
 
             // Google Sheets에 먼저 저장 (로컬 백업용)
-            const sheetsSuccess = await saveToGoogleSheets(formData);
+            const sheetsSuccess = await sendToGoogleSheets(formData);
 
             // EmailJS로 이메일 전송 (일단 Google Sheets만 사용)
             if (false && typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
