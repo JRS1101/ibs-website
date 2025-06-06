@@ -187,25 +187,25 @@ body {
 
 .floating-element:nth-child(1) {
     top: 20%;
-    right: 30%;
+    left: 20%;
     animation-delay: 0s;
 }
 
 .floating-element:nth-child(2) {
     top: 20%;
-    right: 10%;
+    right: 20%;
     animation-delay: 1.5s;
 }
 
 .floating-element:nth-child(3) {
     bottom: 30%;
-    right: 35%;
+    left: 10%;
     animation-delay: 3s;
 }
 
 .floating-element:nth-child(4) {
     bottom: 30%;
-    right: 15%;
+    right: 10%;
     animation-delay: 4.5s;
 }
 
