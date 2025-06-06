@@ -173,6 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Google Sheets 설정 (Google Apps Script Web App URL)
     const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxAtpPNQT5P5X2JM8CAG_bpJ-lxEB0Oh0_gEu6Jkemre-N2odiHkRI4OnHRYDee15Ir/exec';
     
+    // 캐시 무효화를 위한 타임스탬프 추가
+    console.log('🔄 Google Apps Script URL 업데이트됨:', new Date().toISOString());
+    console.log('📍 현재 사용 URL:', GOOGLE_SHEETS_URL);
+    
     // EmailJS 초기화 (실제 사용 시 올바른 Public Key 입력 필요)
     if (typeof emailjs !== 'undefined') {
         emailjs.init(EMAILJS_PUBLIC_KEY);
