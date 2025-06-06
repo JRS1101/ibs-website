@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // EmailJS Public Key
     
     // Google Sheets 설정 (Google Apps Script Web App URL)
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/a/macros/ibs-info.com/s/AKfycbw_KNcKpzQTZGDrM0IBAT-crIxhH2vJgfr3qDVoIvXjKXI5m-mgK3U76DeOx4-NjXyi/exec';
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyQ3ykY9RIAFksOc0V-DaQq4xMfPuZHBoiOaZgcQZKSumAhzbLOaWs1dm96cKOOqojQ/exec';
     
     // EmailJS 초기화 (실제 사용 시 올바른 Public Key 입력 필요)
     if (typeof emailjs !== 'undefined') {
