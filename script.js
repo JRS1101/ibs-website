@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // EmailJS Public Key
     
     // Google Sheets 설정 (Google Apps Script Web App URL)
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxAtpPNQT5P5X2JM8CAG_bpJ-lxEB0Oh0_gEu6Jkemre-N2odiHkRI4OnHRYDee15Ir/exec';
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxNEYJIIafUAwgwinVB2VZIpqmgbdFxtUg2e9VPPZGxZnVrU1xwaTyrrkRyp7VGmIL2/exec';
     
     // 캐시 무효화를 위한 타임스탬프 추가
     console.log('🔄 Google Apps Script URL 업데이트됨:', new Date().toISOString());
