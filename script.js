@@ -170,16 +170,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const EMAILJS_TEMPLATE_ID = 'template_ibs_contact'; // EmailJS 템플릿 ID
     const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // EmailJS Public Key
     
+    // Google Sheets 설정 (Google Apps Script Web App URL)
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    
     // EmailJS 초기화 (실제 사용 시 올바른 Public Key 입력 필요)
     if (typeof emailjs !== 'undefined') {
         emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
+
+    // Google Sheets에 데이터 저장 함수
+    async function saveToGoogleSheets(formData) {
+        try {
+            const response = await fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'addInquiry',
+                    data: {
+                        timestamp: new Date().toLocaleString('ko-KR'),
+                        name: formData.name,
+                        email: formData.email,
+                        company: formData.company,
+                        message: formData.message
+                    }
+                })
+            });
+            
+            const result = await response.text();
+            console.log('Google Sheets 저장 결과:', result);
+            return true;
+        } catch (error) {
+            console.error('Google Sheets 저장 실패:', error);
+            return false;
+        }
     }
 
     // 연락처 폼 처리 (EmailJS로 실제 이메일 전송)
     const contactForm = document.getElementById('contactForm');
     
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // 폼 데이터 수집
@@ -205,6 +237,12 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = '전송 중...';
             submitBtn.disabled = true;
 
+            // 폼 데이터 객체 생성
+            const formData = { name, email, company, message };
+
+            // Google Sheets에 먼저 저장 (로컬 백업용)
+            const sheetsSuccess = await saveToGoogleSheets(formData);
+
             // EmailJS로 이메일 전송
             if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
                 // EmailJS 파라미터 설정
@@ -221,7 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
                     .then(function(response) {
                         console.log('SUCCESS!', response.status, response.text);
-                        showNotification('문의가 성공적으로 전송되었습니다! 빠른 시일 내에 답변드리겠습니다.', 'success');
+                        
+                        if (sheetsSuccess) {
+                            showNotification('문의가 성공적으로 전송되었습니다! 관리 시트에도 저장되었습니다. 빠른 시일 내에 답변드리겠습니다.', 'success');
+                        } else {
+                            showNotification('문의가 성공적으로 전송되었습니다! 빠른 시일 내에 답변드리겠습니다.', 'success');
+                        }
                         
                         // 폼 초기화
                         contactForm.reset();
@@ -234,7 +277,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                     }, function(error) {
                         console.log('FAILED...', error);
-                        showNotification('전송에 실패했습니다. 직접 연락처로 문의해 주세요.', 'error');
+                        
+                        if (sheetsSuccess) {
+                            showNotification('이메일 전송은 실패했지만 문의 내용이 시트에 저장되었습니다. 직접 연락처로 문의해 주세요.', 'error');
+                        } else {
+                            showNotification('전송에 실패했습니다. 직접 연락처로 문의해 주세요.', 'error');
+                        }
                         
                         // 대체 방법: 직접 연락처 표시
                         setTimeout(() => {
