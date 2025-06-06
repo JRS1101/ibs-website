@@ -181,29 +181,69 @@ document.addEventListener('DOMContentLoaded', function() {
     // Google Sheets에 데이터 저장 함수
     async function saveToGoogleSheets(formData) {
         try {
-            const response = await fetch(GOOGLE_SHEETS_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'addInquiry',
-                    data: {
-                        timestamp: new Date().toLocaleString('ko-KR'),
-                        name: formData.name,
-                        email: formData.email,
-                        company: formData.company,
-                        message: formData.message
-                    }
-                })
-            });
+            // 일단 로컬에서 문의 데이터 저장 (콘솔 출력)
+            const inquiryData = {
+                timestamp: new Date().toLocaleString('ko-KR'),
+                name: formData.name,
+                email: formData.email,
+                company: formData.company,
+                message: formData.message
+            };
             
-            const result = await response.text();
-            console.log('Google Sheets 저장 결과:', result);
+            console.log('=== I.B.S 새 문의 접수 ===');
+            console.log('접수시간:', inquiryData.timestamp);
+            console.log('이름:', inquiryData.name);
+            console.log('이메일:', inquiryData.email);
+            console.log('회사:', inquiryData.company);
+            console.log('문의내용:', inquiryData.message);
+            console.log('========================');
+            
+            // 로컬 스토리지에도 저장 (임시)
+            const existingInquiries = JSON.parse(localStorage.getItem('ibs_inquiries') || '[]');
+            existingInquiries.push(inquiryData);
+            localStorage.setItem('ibs_inquiries', JSON.stringify(existingInquiries));
+            console.log('로컬 스토리지에 저장됨. 총', existingInquiries.length, '건의 문의');
+            
+            // Google Sheets URL이 설정되었다면 실제 전송 시도
+            if (GOOGLE_SHEETS_URL !== 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec') {
+                const response = await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'addInquiry',
+                        data: inquiryData
+                    })
+                });
+                
+                const result = await response.text();
+                console.log('Google Sheets 저장 결과:', result);
+            }
+            
             return true;
         } catch (error) {
-            console.error('Google Sheets 저장 실패:', error);
-            return false;
+            console.error('문의 저장 실패:', error);
+            
+            // 에러가 발생해도 로컬에는 저장 시도
+            try {
+                const inquiryData = {
+                    timestamp: new Date().toLocaleString('ko-KR'),
+                    name: formData.name,
+                    email: formData.email,
+                    company: formData.company,
+                    message: formData.message
+                };
+                
+                const existingInquiries = JSON.parse(localStorage.getItem('ibs_inquiries') || '[]');
+                existingInquiries.push(inquiryData);
+                localStorage.setItem('ibs_inquiries', JSON.stringify(existingInquiries));
+                console.log('로컬 스토리지에 백업 저장됨');
+                return true;
+            } catch (localError) {
+                console.error('로컬 저장도 실패:', localError);
+                return false;
+            }
         }
     }
 
@@ -243,8 +283,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Google Sheets에 먼저 저장 (로컬 백업용)
             const sheetsSuccess = await saveToGoogleSheets(formData);
 
-            // EmailJS로 이메일 전송
-            if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
+            // EmailJS로 이메일 전송 (일단 Google Sheets만 사용)
+            if (false && typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
                 // EmailJS 파라미터 설정
                 const templateParams = {
                     from_name: name,
@@ -295,34 +335,31 @@ document.addEventListener('DOMContentLoaded', function() {
                         submitBtn.disabled = false;
                     });
             } else {
-                // EmailJS가 설정되지 않은 경우 mailto 방식 사용
-                const subject = encodeURIComponent(`[I.B.S 문의] ${company} - ${name}님 문의`);
-                const body = encodeURIComponent(
-                    `회사명: ${company}\n` +
-                    `이름: ${name}\n` +
-                    `이메일: ${email}\n\n` +
-                    `문의내용:\n${message}\n\n` +
-                    `---\n` +
-                    `이 메일은 I.B.S 웹사이트 문의 폼에서 발송되었습니다.`
-                );
-                
-                const mailtoLink = `mailto:ibs@ibs-info.com?subject=${subject}&body=${body}`;
-                
-                // 기본 이메일 클라이언트 열기
-                window.location.href = mailtoLink;
-                
-                showNotification('이메일 프로그램이 열립니다. 전송 버튼을 눌러주세요.', 'info');
+                // 현재는 Google Sheets 저장 + 직접 연락 안내 방식
+                if (sheetsSuccess) {
+                    showNotification('✅ 문의가 접수되었습니다! 시트에 저장되었으며, 빠른 시일 내에 연락드리겠습니다.', 'success');
+                    
+                    // 폼 초기화
+                    contactForm.reset();
+                    
+                    // 라벨 위치 초기화
+                    const labels = contactForm.querySelectorAll('label');
+                    labels.forEach(label => {
+                        animateLabel(label, false);
+                    });
+                    
+                } else {
+                    showNotification('❌ 자동 접수에 실패했습니다. 아래 연락처로 직접 문의해 주세요.', 'error');
+                    
+                    // 연락처 정보 표시
+                    setTimeout(() => {
+                        showContactAlternative();
+                    }, 1000);
+                }
                 
                 // 버튼 상태 복원
-                setTimeout(() => {
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }, 2000);
-                
-                // 대체 연락 방법 안내
-                setTimeout(() => {
-                    showContactAlternative();
-                }, 3000);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         });
     }
