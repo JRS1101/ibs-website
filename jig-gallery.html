@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="I.B.S JIG Gallery">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <title>JIG 갤러리 - I.B.S 반도체 PCB JIG 설계 전문기업</title>
+    <meta name="description" content="I.B.S에서 설계하고 제작한 다양한 JIG 제품들을 확인해보세요. Wire Probe JIG, MEMS JIG 등 전문 기술력으로 완성된 작품들">
+    <meta name="keywords" content="JIG 갤러리, Wire Probe JIG, MEMS JIG, 반도체 테스트, PCB JIG 설계">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* JIG 갤러리 전용 스타일 */
+        .gallery-hero {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 120px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(37, 99, 235, 0.05) 0%, transparent 50%);
+            background-size: 200px 200px;
+        }
+
+        .gallery-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .gallery-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gallery-hero p {
+            font-size: 1.2rem;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+
+        .gallery-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .gallery-stat {
+            text-align: center;
+        }
+
+        .gallery-stat h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-stat p {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        /* 갤러리 필터 */
+        .gallery-filters {
+            background: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--gray-200);
+            background: white;
+            color: var(--gray-600);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* 갤러리 그리드 */
+        .gallery-section {
+            padding: 4rem 0;
+            background: var(--light-bg);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .jig-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            group: hover;
+        }
+
+        .jig-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .jig-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .jig-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .jig-card:hover .jig-image img {
+            transform: scale(1.05);
+        }
+
+        .jig-placeholder {
+            color: var(--gray-400);
+            font-size: 3rem;
+        }
+
+        .jig-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+        }
+
+        .jig-card:hover .jig-overlay {
+            opacity: 1;
+        }
+
+        .jig-overlay-content {
+            color: white;
+        }
+
+        .jig-overlay h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .jig-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .jig-info {
+            padding: 1.5rem;
+        }
+
+        .jig-category {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .jig-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .jig-description {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .jig-specs {
+            margin-bottom: 1.2rem;
+        }
+
+        .jig-specs h5 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .jig-specs ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .jig-specs li {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .jig-specs li::before {
+            content: '•';
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .jig-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .jig-tag {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .jig-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .jig-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .jig-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .jig-btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .jig-btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .jig-btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* 백 투 탑 버튼 */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .gallery-hero h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-hero p {
+                font-size: 1rem;
+            }
+
+            .gallery-stats {
+                gap: 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .filter-buttons {
+                gap: 0.8rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .jig-image {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .gallery-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .jig-actions {
+                flex-direction: column;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                right: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* 로딩 애니메이션 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--gray-200);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 이미지 로드 애니메이션 */
+        .jig-card {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .jig-card:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+
+        .jig-card:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 맞춤형 디자인 이미지 스타일 */
+        .custom-design-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .design-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            opacity: 0.3;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        .grid-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .design-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .design-overlay i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .design-overlay span {
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        .custom-design-image:hover .design-grid {
+            animation: rotateGrid 2s ease-in-out infinite;
+        }
+
+        @keyframes rotateGrid {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>I.B.S</h2>
+                <span>InnoBridge SOLUTION</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="index.html#about">회사소개</a></li>
+                <li><a href="index.html#services">서비스</a></li>
+                <li><a href="jig-gallery.html" class="active">JIG 갤러리</a></li>
+                <li><a href="index.html#technology">기술력</a></li>
+                <li><a href="index.html#contact">문의</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 갤러리 히어로 섹션 -->
+    <section class="gallery-hero">
+        <div class="gallery-hero-content">
+            <h1>JIG 갤러리</h1>
+            <p>I.B.S에서 설계하고 제작한 다양한 JIG 제품들을 만나보세요.<br>
+               20년의 경험과 전문성으로 완성된 혁신적인 기술력을 확인해보실 수 있습니다.</p>
+        </div>
+        <div class="gallery-stats">
+            <div class="gallery-stat">
+                <h3>20+</h3>
+                <p>년 설계 경험</p>
+            </div>
+            <div class="gallery-stat">
+                <h3>100+</h3>
+                <p>완성된 JIG</p>
+            </div>
+            <div class="gallery-stat">
+                <h3>세계최초</h3>
+                <p>MEMS JIG</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 갤러리 필터 -->
+    <section class="gallery-filters">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">전체</button>
+            <button class="filter-btn" data-filter="wire-probe">Wire Probe JIG</button>
+            <button class="filter-btn" data-filter="mems">MEMS JIG</button>
+            <button class="filter-btn" data-filter="precision">초정밀 JIG</button>
+            <button class="filter-btn" data-filter="custom">맞춤형 JIG</button>
+                            <button class="filter-btn" data-filter="software">Software 교육</button>
+        </div>
+    </section>
+
+    <!-- 갤러리 섹션 -->
+    <section class="gallery-section">
+        <div class="gallery-grid" id="galleryGrid">
+            
+            <!-- JIG 카드 1 - Wire Probe JIG -->
+            <div class="jig-card" data-category="wire-probe">
+                <div class="jig-image">
+                    <img src="images/jig/wire-probe-jig.jpg" alt="Wire Probe JIG">
+                    <div class="jig-overlay">
+                        <div class="jig-overlay-content">
+                            <h4>Wire Probe JIG</h4>
+                            <p>고정밀 반도체 테스트용</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="jig-info">
+                    <span class="jig-category">Wire Probe</span>
+                    <h3 class="jig-title">20~30㎛ Wire Probe JIG</h3>
+                    <p class="jig-description">
+                        삼성전기 승인 완료된 초정밀 Wire Probe JIG입니다. 
+                        설계부터 완제 제작까지 원스톱 서비스로 제공됩니다.
+                    </p>
+                    <div class="jig-specs">
+                        <h5>주요 사양:</h5>
+                        <ul>
+                            <li>정밀도: 20~30㎛</li>
+                            <li>전장: 10mm 통합 구동</li>
+                            <li>삼성전기 승인 완료</li>
+                            <li>완제품 제작 가능</li>
+                        </ul>
+                    </div>
+                    <div class="jig-tags">
+                        <span class="jig-tag">초정밀</span>
+                        <span class="jig-tag">삼성전기</span>
+                        <span class="jig-tag">완제품</span>
+                    </div>
+                    <div class="jig-actions">
+                        <a href="index.html#contact" class="jig-btn jig-btn-primary">
+                            <i class="fas fa-envelope"></i> 문의하기
+                        </a>
+                        <a href="#" class="jig-btn jig-btn-secondary">
+                            <i class="fas fa-info-circle"></i> 상세정보
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JIG 카드 2 - MEMS JIG -->
+            <div class="jig-card" data-category="mems">
+                <div class="jig-image">
+                    <img src="images/jig/mems-jig.jpg" alt="MEMS JIG">
+                    <div class="jig-overlay">
+                        <div class="jig-overlay-content">
+                            <h4>MEMS JIG</h4>
+                            <p>세계 최초 전기검사용</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="jig-info">
+                    <span class="jig-category">MEMS</span>
+                    <h3 class="jig-title">세계 최초 MEMS JIG</h3>
+                    <p class="jig-description">
+                        세계 최초로 개발된 전기검사 MEMS JIG입니다. 
+                        삼성전기에 납품 상용화되어 검증된 기술력을 자랑합니다.
+                    </p>
+                    <div class="jig-specs">
+                        <h5>주요 특징:</h5>
+                        <ul>
+                            <li>세계 최초 전기검사 기술</li>
+                            <li>삼성전기 납품 상용화</li>
+                            <li>차세대 MEMS JIG 개발 중</li>
+                            <li>특허 기술 보유</li>
+                        </ul>
+                    </div>
+                    <div class="jig-tags">
+                        <span class="jig-tag">세계최초</span>
+                        <span class="jig-tag">전기검사</span>
+                        <span class="jig-tag">상용화</span>
+                    </div>
+                    <div class="jig-actions">
+                        <a href="index.html#contact" class="jig-btn jig-btn-primary">
+                            <i class="fas fa-envelope"></i> 문의하기
+                        </a>
+                        <a href="#" class="jig-btn jig-btn-secondary">
+                            <i class="fas fa-info-circle"></i> 상세정보
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JIG 카드 3 - JIG 전체 모습 -->
+            <div class="jig-card" data-category="precision">
+                <div class="jig-image">
+                    <img src="images/jig/jig 전체 모습.jpg" alt="JIG 전체 모습">
+                    <div class="jig-overlay">
+                        <div class="jig-overlay-content">
+                            <h4>JIG 정면 모습</h4>
+                            <p>완성된 JIG 전체 구조</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="jig-info">
+                    <span class="jig-category">완성품</span>
+                    <h3 class="jig-title">JIG 정면 완성품</h3>
+                    <p class="jig-description">
+                        완성된 JIG의 정면 모습입니다. 
+                        모든 구성 요소가 정밀하게 조립된 최종 완성품입니다.
+                    </p>
+                    <div class="jig-specs">
+                        <h5>완성품 특징:</h5>
+                        <ul>
+                            <li>정밀 조립 완성품</li>
+                            <li>모든 구성요소 통합</li>
+                            <li>품질 검증 완료</li>
+                            <li>즉시 사용 가능</li>
+                        </ul>
+                    </div>
+                    <div class="jig-tags">
+                        <span class="jig-tag">완성품</span>
+                        <span class="jig-tag">정면뷰</span>
+                        <span class="jig-tag">검증완료</span>
+                    </div>
+                    <div class="jig-actions">
+                        <a href="index.html#contact" class="jig-btn jig-btn-primary">
+                            <i class="fas fa-envelope"></i> 문의하기
+                        </a>
+                        <a href="#" class="jig-btn jig-btn-secondary">
+                            <i class="fas fa-info-circle"></i> 상세정보
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JIG 카드 4 - Software 교육 -->
+            <div class="jig-card" data-category="software">
+                <div class="jig-image">
+                    <img src="images/jig/Software.jpg" alt="Software 교육">
+                    <div class="jig-overlay">
+                        <div class="jig-overlay-content">
+                            <h4>각종 Software 교육</h4>
+                            <p>전문 소프트웨어 교육 프로그램</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="jig-info">
+                    <span class="jig-category">Software</span>
+                    <h3 class="jig-title">각종 Software 교육</h3>
+                    <p class="jig-description">
+                        PCB JIG 설계에 필요한 다양한 소프트웨어 교육을 제공합니다. 
+                        CAD, 시뮬레이션, 설계 검증 등 전문 프로그램 활용법을 학습할 수 있습니다.
+                    </p>
+                    <div class="jig-specs">
+                        <h5>교육 프로그램:</h5>
+                        <ul>
+                            <li>CAD 설계 소프트웨어</li>
+                            <li>시뮬레이션 프로그램</li>
+                            <li>JIG 설계 검증 툴</li>
+                            <li>최적화 알고리즘</li>
+                        </ul>
+                    </div>
+                    <div class="jig-tags">
+                        <span class="jig-tag">Software</span>
+                        <span class="jig-tag">교육</span>
+                        <span class="jig-tag">CAD</span>
+                    </div>
+                    <div class="jig-actions">
+                        <a href="index.html#contact" class="jig-btn jig-btn-primary">
+                            <i class="fas fa-envelope"></i> 문의하기
+                        </a>
+                        <a href="#" class="jig-btn jig-btn-secondary">
+                            <i class="fas fa-info-circle"></i> 상세정보
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JIG 카드 5 - 맞춤형 JIG -->
+            <div class="jig-card" data-category="custom">
+                <div class="jig-image">
+                    <div class="custom-design-image">
+                        <div class="design-grid">
+                            <div class="grid-item"><i class="fas fa-drafting-compass"></i></div>
+                            <div class="grid-item"><i class="fas fa-microchip"></i></div>
+                            <div class="grid-item"><i class="fas fa-cogs"></i></div>
+                            <div class="grid-item"><i class="fas fa-ruler-combined"></i></div>
+                        </div>
+                        <div class="design-overlay">
+                            <i class="fas fa-pencil-ruler"></i>
+                            <span>CUSTOM DESIGN</span>
+                        </div>
+                    </div>
+                    <div class="jig-overlay">
+                        <div class="jig-overlay-content">
+                            <h4>맞춤형 JIG</h4>
+                            <p>고객 요구사항 맞춤 설계</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="jig-info">
+                    <span class="jig-category">맞춤형</span>
+                    <h3 class="jig-title">고객 맞춤형 JIG 설계</h3>
+                    <p class="jig-description">
+                        고객의 특별한 요구사항에 맞춘 맞춤형 JIG 설계 서비스입니다. 
+                        사양부터 완제품까지 전 과정을 지원합니다.
+                    </p>
+                    <div class="jig-specs">
+                        <h5>서비스 범위:</h5>
+                        <ul>
+                            <li>사양 분석 및 설계</li>
+                            <li>프로토타입 제작</li>
+                            <li>테스트 및 검증</li>
+                            <li>완제품 대량 생산</li>
+                        </ul>
+                    </div>
+                    <div class="jig-tags">
+                        <span class="jig-tag">맞춤설계</span>
+                        <span class="jig-tag">원스톱</span>
+                        <span class="jig-tag">컨설팅</span>
+                    </div>
+                    <div class="jig-actions">
+                        <a href="index.html#contact" class="jig-btn jig-btn-primary">
+                            <i class="fas fa-envelope"></i> 문의하기
+                        </a>
+                        <a href="#" class="jig-btn jig-btn-secondary">
+                            <i class="fas fa-info-circle"></i> 상세정보
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JIG 카드 6 - JIG 구조 설계 -->
+            <div class="jig-card" data-category="custom">
+                <div class="jig-image">
+                    <img src="images/jig/jig-diagram.jpg" alt="JIG 구조 다이어그램">
+                    <div class="jig-overlay">
+                        <div class="jig-overlay-content">
+                            <h4>JIG 구조 설계</h4>
+                            <p>상세 구조 설계도</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="jig-info">
+                    <span class="jig-category">설계도</span>
+                    <h3 class="jig-title">JIG 구조 설계 다이어그램</h3>
+                    <p class="jig-description">
+                        Top JIG과 Bottom JIG의 상세 구조를 보여주는 설계 다이어그램입니다. 
+                        각 구성요소와 연결 방식을 명확하게 설명합니다.
+                    </p>
+                    <div class="jig-specs">
+                        <h5>구조 구성요소:</h5>
+                        <ul>
+                            <li>Connector pins (to tester)</li>
+                            <li>Wire pin & IC substrate PCB</li>
+                            <li>PIN BLOCK & Micro processor</li>
+                            <li>Support block & Base plate</li>
+                        </ul>
+                    </div>
+                    <div class="jig-tags">
+                        <span class="jig-tag">설계도</span>
+                        <span class="jig-tag">구조분석</span>
+                        <span class="jig-tag">기술문서</span>
+                    </div>
+                    <div class="jig-actions">
+                        <a href="index.html#contact" class="jig-btn jig-btn-primary">
+                            <i class="fas fa-envelope"></i> 문의하기
+                        </a>
+                        <a href="#" class="jig-btn jig-btn-secondary">
+                            <i class="fas fa-info-circle"></i> 상세정보
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>I.B.S</h3>
+                    <p>InnoBridge SOLUTION</p>
+                    <p>Professional JIG Design Team</p>
+                </div>
+                <div class="footer-contact">
+                    <h4>연락처</h4>
+                    <p>대표: 이준로 (010-3664-6268)</p>
+                    <p>ibs@ibs-info.com</p>
+                </div>
+                <div class="footer-services">
+                    <h4>전문 분야</h4>
+                    <p>반도체 Test Wire Probe JIG</p>
+                    <p>MEMS JIG 개발</p>
+                    <p>설계 공정 Process 최적화</p>
+                    <p>설계 소프트웨어 교육</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 InnoBridge SOLUTION. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 백 투 탑 버튼 -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // 갤러리 필터 기능
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const jigCards = document.querySelectorAll('.jig-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 활성 버튼 변경
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+
+                    // 카드 필터링
+                    jigCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 50);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+
+            // 백 투 탑 버튼
+            const backToTop = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('show');
+                } else {
+                    backToTop.classList.remove('show');
+                }
+            });
+
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 네비게이션 메뉴 (모바일)
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+
+            // 부드러운 스크롤
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -72,7 +72,7 @@ body {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 1.8rem;
 }
 
 .nav-menu a {
