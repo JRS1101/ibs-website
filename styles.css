@@ -51,7 +51,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1.2rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -59,20 +59,26 @@ body {
 .nav-logo {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
 }
 
 .logo-image {
-    width: 45px;
-    height: 45px;
+    width: 60px;
+    height: 60px;
     object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(37, 99, 235, 0.1);
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
+    transition: all 0.3s ease;
 }
 
 .logo-image:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 6px 25px rgba(37, 99, 235, 0.25);
+    border-color: rgba(37, 99, 235, 0.2);
 }
 
 .logo-text h2 {
@@ -1144,8 +1150,9 @@ section {
     }
 
     .logo-image {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
+        padding: 6px;
     }
 
     .logo-text h2 {
