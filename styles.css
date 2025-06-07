@@ -51,7 +51,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1.1rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -63,8 +63,8 @@ body {
 }
 
 .logo-image {
-    width: 55px;
-    height: 55px;
+    width: 65px;
+    height: 65px;
     object-fit: contain;
     border-radius: 6px;
     transition: all 0.3s ease;
@@ -1145,8 +1145,8 @@ section {
     }
 
     .logo-image {
-        width: 45px;
-        height: 45px;
+        width: 55px;
+        height: 55px;
     }
 
     .logo-text h2 {
