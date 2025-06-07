@@ -56,14 +56,33 @@ body {
     margin: 0 auto;
 }
 
-.nav-logo h2 {
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-image {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.logo-image:hover {
+    transform: scale(1.05);
+}
+
+.logo-text h2 {
     color: var(--primary-color);
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 0.2rem;
 }
 
-.nav-logo span {
+.logo-text span {
     color: var(--gray-600);
     font-size: 0.8rem;
     font-weight: 300;
@@ -1122,6 +1141,19 @@ section {
     
     .nav-container {
         padding: 1rem 1.5rem;
+    }
+
+    .logo-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    .logo-text h2 {
+        font-size: 1.5rem;
+    }
+
+    .logo-text span {
+        font-size: 0.7rem;
     }
     
     .hero {
