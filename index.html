@@ -20,6 +20,8 @@
     
     <!-- EmailJS 라이브러리 -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- 다국어 번역 스크립트 -->
+    <script src="translations.js"></script>
 </head>
 <body>
     <!-- 네비게이션 -->
@@ -32,14 +34,24 @@
                 </div>
             </div>
             <ul class="nav-menu">
-                <li><a href="#home">홈</a></li>
-                <li><a href="#about">회사소개</a></li>
-                <li><a href="#services">서비스</a></li>
-                <li><a href="jig-gallery.html">JIG 갤러리</a></li>
-                <li><a href="#portfolio">포트폴리오</a></li>
-                <li><a href="#technology">기술력</a></li>
-                <li><a href="#contact">문의</a></li>
+                <li><a href="#home" data-translate="nav_home">홈</a></li>
+                <li><a href="#about" data-translate="nav_about">회사소개</a></li>
+                <li><a href="#services" data-translate="nav_services">서비스</a></li>
+                <li><a href="jig-gallery.html" data-translate="nav_jig_gallery">JIG 갤러리</a></li>
+                <li><a href="#portfolio" data-translate="nav_portfolio">포트폴리오</a></li>
+                <li><a href="#technology" data-translate="nav_technology">기술력</a></li>
+                <li><a href="#contact" data-translate="nav_contact">문의</a></li>
             </ul>
+            <!-- 언어 선택기 -->
+            <div class="language-selector">
+                <div class="current-language">🇰🇷 KO</div>
+                <div class="language-dropdown">
+                    <a href="#" class="language-option" data-lang="ko">🇰🇷 Korean</a>
+                    <a href="#" class="language-option" data-lang="en">🇺🇸 English</a>
+                    <a href="#" class="language-option" data-lang="ja">🇯🇵 Japanese</a>
+                    <a href="#" class="language-option" data-lang="zh">🇨🇳 Chinese</a>
+                </div>
+            </div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -52,14 +64,14 @@
     <section id="home" class="hero">
         <div class="hero-section">
             <div class="hero-content">
-                <h1>전문가 팀의 JIG 설계 혁신</h1>
-                <p>
+                <h1 data-translate="hero_title">전문가 팀의 JIG 설계 혁신</h1>
+                <p data-translate="hero_subtitle">
                     반도체 PCB JIG 설계 분야의 전문가들이 만들어가는<br>
                     혁신적인 기술 솔루션과 차별화된 서비스
                 </p>
                 <div class="hero-buttons">
-                    <a href="#contact" class="btn-primary">문의하기</a>
-                    <a href="#portfolio" class="btn-secondary">프로젝트 보기</a>
+                    <a href="#contact" class="btn-primary" data-translate="hero_btn_contact">문의하기</a>
+                    <a href="#portfolio" class="btn-secondary" data-translate="hero_btn_portfolio">프로젝트 보기</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -80,15 +92,14 @@
         <div class="hero-stats">
             <div class="stat">
                 <h3>20+</h3>
-                <p>년 경력</p>
+                <p data-translate="hero_stat_years">년 경력</p>
             </div>
             <div class="stat">
                 <h3>100+</h3>
-                <p>프로젝트</p>
+                <p data-translate="hero_stat_projects">프로젝트</p>
             </div>
             <div class="stat">
-                <h3>세계최초</h3>
-                <p>MEMS JIG 개발</p>
+                <h3 data-translate="hero_stat_mems">세계최초<br>MEMS JIG 개발</h3>
             </div>
         </div>
     </section>
@@ -97,49 +108,49 @@
     <section id="about" class="about">
         <div class="container">
             <div class="section-header">
-                <h2>I.B.S 소개</h2>
-                <p>InnoBridge SOLUTION - 혁신적인 기술 솔루션 파트너</p>
+                <h2 data-translate="about_title">I.B.S 소개</h2>
+                <p data-translate="about_subtitle">InnoBridge SOLUTION - 혁신적인 기술 솔루션 파트너</p>
             </div>
             <div class="about-content">
                 <div class="about-text">
-                    <h3>전문가 팀과 함께하는 기술 혁신</h3>
-                    <p>I.B.S(InnoBridge SOLUTION)는 반도체 PCB JIG 설계 분야의 전문 기업입니다. 수원에 본사를 둔 혁신적인 기술 솔루션 회사로, 경험 많은 전문가팀이 고객에게 최적의 솔루션을 제공합니다.</p>
+                    <h3 data-translate="about_main_title">전문가 팀과 함께하는 기술 혁신</h3>
+                    <p data-translate="about_description">I.B.S(InnoBridge SOLUTION)는 반도체 PCB JIG 설계 분야의 전문 기업입니다. 수원에 본사를 둔 혁신적인 기술 솔루션 회사로, 경험 많은 전문가팀이 고객에게 최적의 솔루션을 제공합니다.</p>
                     <div class="features">
                         <div class="feature">
                             <i class="fas fa-microchip"></i>
-                            <h4>반도체 Test Wire Probe JIG</h4>
-                            <p>사양,거버,설계부터 완제까지 Wire Probe Jig 원스톱 서비스</p>
+                            <h4 data-translate="feature_probe_title">반도체 Test Wire Probe JIG</h4>
+                            <p data-translate="feature_probe_desc">사양,거버,설계부터 완제까지 Wire Probe Jig 원스톱 서비스</p>
                         </div>
                         <div class="feature">
                             <i class="fas fa-cog"></i>
-                            <h4>MEMS JIG 개발</h4>
-                            <p>세계 최초 전기검사 MEMS JIG 개발 경험</p>
+                            <h4 data-translate="feature_mems_title">MEMS JIG 개발</h4>
+                            <p data-translate="feature_mems_desc">세계 최초 전기검사 MEMS JIG 개발 경험</p>
                         </div>
                         <div class="feature">
                             <i class="fas fa-robot"></i>
-                            <h4>설계 공정 Process 최적화</h4>
-                            <p>전문 소프트웨어 도구를 활용한 설계 효율성 극대화</p>
+                            <h4 data-translate="feature_optimization_title">설계 공정 Process 최적화</h4>
+                            <p data-translate="feature_optimization_desc">전문 소프트웨어 도구를 활용한 설계 효율성 극대화</p>
                         </div>
                         <div class="feature">
                             <i class="fas fa-graduation-cap"></i>
-                            <h4>설계 소프트웨어 교육</h4>
-                            <p>IG-Station, EZ-Cat, Cam350, AutoCAD 등 전문 교육</p>
+                            <h4 data-translate="feature_education_title">설계 소프트웨어 교육</h4>
+                            <p data-translate="feature_education_desc">IG-Station, EZ-Cat, Cam350, AutoCAD 등 전문 교육</p>
                         </div>
                     </div>
                 </div>
                 <div class="about-image">
                     <div class="card">
-                        <h4>대표이사 소개</h4>
+                        <h4 data-translate="ceo_intro_title">대표이사 소개</h4>
                         <div class="profile-info">
                             <div class="executive-member">
-                                <h5>이준로 대표이사</h5>
-                                <p><i class="fas fa-user-tie"></i> CEO (Chief Executive Officer)</p>
+                                <h5 data-translate="ceo_name">이준로 대표이사</h5>
+                                <p><i class="fas fa-user-tie"></i> <span data-translate="ceo_position">CEO (Chief Executive Officer)</span></p>
                                 <p><i class="fas fa-phone"></i> 010-3664-6268</p>
                                 <p><i class="fas fa-envelope"></i> jr.lee@ibs-info.com</p>
                                 <div class="executive-details">
-                                    <p><i class="fas fa-briefcase"></i> 20년 JIG 설계 경력</p>
-                                    <p><i class="fas fa-graduation-cap"></i> 공주사범대학교 영문학과</p>
-                                    <p><i class="fas fa-award"></i> Wire Probe JIG, MEMS JIG 전문가</p>
+                                    <p><i class="fas fa-briefcase"></i> <span data-translate="ceo_experience">20년 JIG 설계 경력</span></p>
+                                    <p><i class="fas fa-graduation-cap"></i> <span data-translate="ceo_education">공주사범대학교 영문학과</span></p>
+                                    <p><i class="fas fa-award"></i> <span data-translate="ceo_expertise">Wire Probe JIG, MEMS JIG 전문가</span></p>
                                 </div>
                             </div>
                         </div>
@@ -153,16 +164,16 @@
     <section id="services" class="services">
         <div class="container">
             <div class="section-header">
-                <h2>전문 서비스</h2>
-                <p>고객의 기술향상을 위한 맞춤형 솔루션</p>
+                <h2 data-translate="services_title">전문 서비스</h2>
+                <p data-translate="services_subtitle">고객의 기술향상을 위한 맞춤형 솔루션</p>
             </div>
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-drafting-compass"></i>
                     </div>
-                    <h3>JIG 설계 및 완제 제작</h3>
-                    <p>설계 기술 및 제작 노하우를 바탕으로 다양한 Wire Probe 설계부터 완제 제작까지 원스톱 서비스</p>
+                    <h3 data-translate="service_design_title">JIG 설계 및 완제 제작</h3>
+                    <p data-translate="service_design_desc">설계 기술 및 제작 노하우를 바탕으로 다양한 Wire Probe 설계부터 완제 제작까지 원스톱 서비스</p>
                     <ul>
                         <li>Wire Probe JIG 설계부터 완제 제작까지</li>
                         <li>20~30㎛ 통합 Structure 제작</li>
@@ -175,8 +186,8 @@
                     <div class="service-icon">
                         <i class="fas fa-laptop-code"></i>
                     </div>
-                    <h3>기술 컨설팅</h3>
-                    <p>20년 노하우를 바탕으로 한 전문 기술 컨설팅 서비스</p>
+                    <h3 data-translate="service_consulting_title">기술 컨설팅</h3>
+                    <p data-translate="service_consulting_desc">20년 노하우를 바탕으로 한 전문 기술 컨설팅 서비스</p>
                     <ul>
                         <li>설계 최적화 컨설팅</li>
                         <li>프로세스 개선 방안 제시</li>
@@ -187,8 +198,8 @@
                     <div class="service-icon">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <h3>설계 프로세스 최적화</h3>
-                    <p>전문 소프트웨어 도구를 활용한 설계 프로세스 혁신</p>
+                    <h3 data-translate="service_optimization_title">설계 프로세스 최적화</h3>
+                    <p data-translate="service_optimization_desc">전문 소프트웨어 도구를 활용한 설계 프로세스 혁신</p>
                     <ul>
                         <li>IG-Station, EZ-Cat 활용 최적화</li>
                         <li>Cam350, AutoCAD 전문 기술</li>
@@ -199,7 +210,7 @@
                     <div class="service-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <h3>설계 소프트웨어 교육</h3>
+                    <h3 data-translate="service_education_title">설계 소프트웨어 교육</h3>
                     <p>고객사 엔지니어 대상 전문 소프트웨어 교육 서비스</p>
                     <ul>
                         <li>IG-Station, EZ-Cat 실무 교육</li>
@@ -215,8 +226,8 @@
     <section id="portfolio" class="portfolio">
         <div class="container">
             <div class="section-header">
-                <h2>주요 프로젝트</h2>
-                <p>혁신적인 JIG 설계 프로젝트들</p>
+                <h2 data-translate="portfolio_title">주요 프로젝트</h2>
+                <p data-translate="portfolio_subtitle">혁신적인 JIG 설계 프로젝트들</p>
             </div>
             <div class="portfolio-grid">
                 <div class="portfolio-item">
@@ -312,15 +323,15 @@
     <section id="technology" class="technology">
         <div class="container">
             <div class="section-header">
-                <h2>기술력 & 특허</h2>
-                <p>20년 축적된 노하우와 혁신 기술</p>
+                <h2 data-translate="technology_title">기술력 & 특허</h2>
+                <p data-translate="technology_subtitle">20년 축적된 노하우와 혁신 기술</p>
             </div>
             <div class="tech-grid">
                 <div class="tech-category">
                     <div class="tech-icon">
                         <i class="fas fa-award"></i>
                     </div>
-                    <h3>핵심 기술</h3>
+                    <h3 data-translate="tech_core_title">핵심 기술</h3>
                     <ul class="tech-list">
                         <li>
                             <i class="fas fa-check-circle"></i>
@@ -340,7 +351,7 @@
                     <div class="tech-icon">
                         <i class="fas fa-certificate"></i>
                     </div>
-                    <h3>보유 역량</h3>
+                    <h3 data-translate="tech_capability_title">보유 역량</h3>
                     <ul class="tech-list">
                         <li>
                             <i class="fas fa-check-circle"></i>
@@ -364,7 +375,7 @@
                     <div class="tech-icon">
                         <i class="fas fa-lightbulb"></i>
                     </div>
-                    <h3>혁신 기술</h3>
+                    <h3 data-translate="tech_innovation_title">혁신 기술</h3>
                     <ul class="tech-list">
                         <li>
                             <i class="fas fa-check-circle"></i>
@@ -407,29 +418,29 @@
     <section id="contact" class="contact">
         <div class="container">
             <div class="section-header">
-                <h2>문의하기</h2>
-                <p>I.B.S와 함께 기술 혁신을 시작하세요</p>
+                <h2 data-translate="contact_title">문의하기</h2>
+                <p data-translate="contact_subtitle">I.B.S와 함께 기술 혁신을 시작하세요</p>
             </div>
             <div class="contact-content">
                 <div class="contact-info">
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
                         <div class="contact-item-content">
-                            <h4>주소</h4>
+                            <h4 data-translate="contact_address_title">주소</h4>
                             <p>수원시 장안구 덕영대로 417번길 52-5 502호</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
                         <div class="contact-item-content">
-                            <h4>연락처</h4>
+                            <h4 data-translate="contact_phone_title">연락처</h4>
                             <p>이준로 대표: 010-3664-6268</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
                         <div class="contact-item-content">
-                            <h4>이메일</h4>
+                            <h4 data-translate="contact_email_title">이메일</h4>
                             <p style="margin-bottom: 0.3rem;">
                                 <span style="color: #60a5fa;">회사:</span> ibs@ibs-info.com
                             </p>
@@ -441,20 +452,20 @@
                     <div class="contact-item">
                         <i class="fas fa-globe"></i>
                         <div class="contact-item-content">
-                            <h4>웹사이트</h4>
+                            <h4 data-translate="contact_website_title">웹사이트</h4>
                             <p>web.ibs-info.com</p>
                         </div>
                     </div>
                 </div>
                 <div class="contact-form">
                     <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">
-                        <i class="fas fa-envelope"></i> 문의 방법
+                        <i class="fas fa-envelope"></i> <span data-translate="contact_method_title">문의 방법</span>
                     </h3>
                     
                     <!-- 직접 연락 정보 -->
                     <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
                         <h4 style="color: var(--text-color); margin-bottom: 1rem;">
-                            <i class="fas fa-phone"></i> 직접 연락하기 (빠른 응답)
+                            <i class="fas fa-phone"></i> <span data-translate="contact_direct_title">직접 연락하기 (빠른 응답)</span>
                         </h4>
                         <div style="display: flex; flex-direction: column; gap: 0.8rem;">
                             <a href="tel:010-3664-6268" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">
@@ -468,24 +479,24 @@
 
                     <!-- 온라인 문의 폼 -->
                     <h4 style="color: var(--text-color); margin-bottom: 1rem; text-align: center;">
-                        <i class="fas fa-edit"></i> 온라인 문의 폼
+                        <i class="fas fa-edit"></i> <span data-translate="contact_form_title">온라인 문의 폼</span>
                     </h4>
                     <form id="contactForm">
                         <div class="form-group">
                             <input type="text" id="name" required>
-                            <label for="name">이름</label>
+                            <label for="name" data-translate="form_name">이름</label>
                         </div>
                         <div class="form-group">
                             <input type="email" id="email" required>
-                            <label for="email">이메일</label>
+                            <label for="email" data-translate="form_email">이메일</label>
                         </div>
                         <div class="form-group">
                             <input type="text" id="company" required>
-                            <label for="company">회사명</label>
+                            <label for="company" data-translate="form_company">회사명</label>
                         </div>
                         <div class="form-group">
                             <textarea id="message" required></textarea>
-                            <label for="message">문의내용</label>
+                            <label for="message" data-translate="form_message">문의내용</label>
                         </div>
                         <button type="submit" class="btn-primary">문의 보내기</button>
                         <p style="font-size: 0.85rem; color: var(--gray-600); text-align: center; margin-top: 1rem;">

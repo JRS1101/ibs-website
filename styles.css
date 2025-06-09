@@ -131,6 +131,86 @@ body {
     transition: 0.3s;
 }
 
+/* Language Selector */
+.language-selector {
+    position: relative;
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.current-language {
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.current-language:hover {
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.language-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--gray-200);
+    min-width: 150px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.language-selector:hover .language-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.language-option {
+    display: block;
+    padding: 10px 15px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.language-option:last-child {
+    border-bottom: none;
+}
+
+.language-option:hover {
+    background: var(--gray-50);
+    color: var(--primary-color);
+    padding-left: 20px;
+}
+
+.language-option:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.language-option:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -947,6 +1027,26 @@ section {
     
     .nav-menu.active {
         left: 0;
+    }
+
+    .language-selector {
+        margin-left: 0;
+        margin-right: 1rem;
+    }
+
+    .current-language {
+        font-size: 0.8rem;
+        padding: 6px 8px;
+    }
+
+    .language-dropdown {
+        right: -10px;
+        min-width: 120px;
+    }
+
+    .language-option {
+        padding: 8px 12px;
+        font-size: 0.8rem;
     }
     
     .hero {
