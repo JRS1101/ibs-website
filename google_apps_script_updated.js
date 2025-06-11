@@ -2,7 +2,7 @@
 // 더 예쁜 테이블 형태로 저장됩니다!
 
 // 스프레드시트 설정
-const SPREADSHEET_ID = '1pnvmPgSbv0yzXErNDCQbItnGBOF_jqxk3qtq-Y3kco0'; // Google Sheets ID
+const SPREADSHEET_ID = '1fhKd8YPktuykVcJiE7mTah98IxJtj5w4usMoa29PwF4'; // Google Sheets ID
 const SHEET_NAME = 'I.B.S 문의내역'; // 시트 이름
 
 function doPost(e) {
@@ -58,7 +58,7 @@ function addInquiry(inquiryData) {
       setupPrettyTable(sheet);
     }
     
-    // 새 행 추가
+    // 새 행 추가 (전화번호 포함)
     const newRow = [
       inquiryData.timestamp,
       inquiryData.name,
@@ -96,9 +96,9 @@ function addInquiry(inquiryData) {
   }
 }
 
-// 예쁜 테이블 초기 설정
+// 예쁜 테이블 초기 설정 (전화번호 포함)
 function setupPrettyTable(sheet) {
-  // 헤더 데이터
+  // 헤더 데이터 (전화번호 추가)
   const headers = ['📅 접수일시', '👤 이름', '📧 이메일', '📞 전화번호', '🏢 회사명', '💬 문의내용', '📊 상태'];
   
   // 헤더 추가
@@ -116,7 +116,7 @@ function setupPrettyTable(sheet) {
   // 헤더에 테두리 추가
   headerRange.setBorder(true, true, true, true, true, true, '#ffffff', SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
   
-  // 열 너비 최적화
+  // 열 너비 최적화 (전화번호 포함)
   sheet.setColumnWidth(1, 160); // 접수일시
   sheet.setColumnWidth(2, 80);  // 이름
   sheet.setColumnWidth(3, 200); // 이메일
@@ -135,7 +135,7 @@ function setupPrettyTable(sheet) {
   addConditionalFormatting(sheet);
 }
 
-// 새 행 스타일링
+// 새 행 스타일링 (7개 컬럼 대응)
 function stylizeNewRow(sheet, rowNumber) {
   const range = sheet.getRange(rowNumber, 1, 1, 7);
   
@@ -169,7 +169,7 @@ function stylizeNewRow(sheet, rowNumber) {
   sheet.getRange(rowNumber, 6).setWrap(true);
 }
 
-// 조건부 서식 (상태별 색상)
+// 조건부 서식 (상태별 색상) - G열로 수정
 function addConditionalFormatting(sheet) {
   // 신규 상태 - 연한 파란색
   const newRule = SpreadsheetApp.newConditionalFormatRule()
@@ -274,49 +274,6 @@ function updateInquiryStatus(row, status) {
     
     return {success: true, message: '상태가 업데이트되었습니다.'};
   } catch (error) {
-    return {success: false, error: error.toString()};
-  }
-}
-
-// 스프레드시트 생성 및 초기 설정 함수 (최초 1회 실행)
-function setupSpreadsheet() {
-  try {
-    // 새 스프레드시트 생성
-    const spreadsheet = SpreadsheetApp.create('I.B.S 문의 관리 시트');
-    const sheet = spreadsheet.getActiveSheet();
-    sheet.setName(SHEET_NAME);
-    
-    // 헤더 설정
-    const headers = ['접수일시', '이름', '이메일', '회사명', '문의내용', '상태'];
-    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    
-    // 헤더 스타일링
-    const headerRange = sheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground('#4285f4');
-    headerRange.setFontColor('#ffffff');
-    headerRange.setFontWeight('bold');
-    headerRange.setHorizontalAlignment('center');
-    
-    // 열 너비 설정
-    sheet.setColumnWidth(1, 150); // 접수일시
-    sheet.setColumnWidth(2, 100); // 이름
-    sheet.setColumnWidth(3, 200); // 이메일
-    sheet.setColumnWidth(4, 150); // 회사명
-    sheet.setColumnWidth(5, 300); // 문의내용
-    sheet.setColumnWidth(6, 80);  // 상태
-    
-    Logger.log('스프레드시트 생성 완료');
-    Logger.log('스프레드시트 ID: ' + spreadsheet.getId());
-    Logger.log('스프레드시트 URL: ' + spreadsheet.getUrl());
-    
-    return {
-      success: true,
-      spreadsheetId: spreadsheet.getId(),
-      url: spreadsheet.getUrl()
-    };
-    
-  } catch (error) {
-    Logger.log('스프레드시트 생성 실패: ' + error.toString());
     return {success: false, error: error.toString()};
   }
 } 
