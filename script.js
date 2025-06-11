@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // EmailJS Public Key
     
     // Google Sheets 설정 (Google Apps Script Web App URL)
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbysdyIV9jYDRF8ugQ4Tc6t_3Oac_GdW3GVM7GtMCIKZwMkj2gsvxHf9cu52Nyn8Mg5D/exec';
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwlDsxWl_TBIU1zuRKiU41FYd-fTRipGiYoHK00LkdhhcWlYOLCcMqHijuV06Eds9UI/exec';
     
     // 캐시 무효화를 위한 타임스탬프 추가
     console.log('🔄 Google Apps Script URL 업데이트됨:', new Date().toISOString());
@@ -186,44 +186,19 @@ document.addEventListener('DOMContentLoaded', function() {
     async function sendToGoogleSheets(formData) {
         try {
             console.log('📊 Google Sheets로 데이터 전송 시작...');
-            
-            // Form submit 방식으로 CORS 우회
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = GOOGLE_SHEETS_URL;
-            form.target = 'hidden_iframe';
-            form.style.display = 'none';
-            
-            // JSON 데이터를 hidden input으로 추가
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'data';
-            input.value = JSON.stringify(formData);
-            form.appendChild(input);
-            
-            // Hidden iframe 생성 (응답 받기용)
-            let iframe = document.getElementById('hidden_iframe');
-            if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.id = 'hidden_iframe';
-                iframe.name = 'hidden_iframe';
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-            }
-            
-            // Form을 DOM에 추가하고 submit
-            document.body.appendChild(form);
-            form.submit();
-            
-            // Form 제거
-            document.body.removeChild(form);
-            
-            console.log('✅ Google Sheets 전송 완료');
-            return { success: true };
-            
+            const response = await fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            console.log('✅ Google Sheets 전송 완료', result);
+            return result.success;
         } catch (error) {
             console.error('❌ Google Sheets 전송 실패:', error);
-            throw error;
+            return false;
         }
     }
 
