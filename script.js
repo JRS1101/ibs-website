@@ -239,16 +239,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const company = document.getElementById('company').value;
             const message = document.getElementById('message').value;
             
-            // 유효성 검사
-            if (!name || !email || !phone || !company || !message) {
-                showNotification('모든 필드를 채워주세요.', 'error');
+            // 더 관대한 유효성 검사
+            console.log('📝 폼 데이터 확인:', { name, email, phone, company, message });
+            
+            if (!name || !email || !message) {
+                showNotification('이름, 이메일, 문의내용은 필수입니다.', 'error');
                 return;
             }
             
-            if (!isValidEmail(email)) {
+            if (email && !isValidEmail(email)) {
                 showNotification('올바른 이메일 주소를 입력해주세요.', 'error');
                 return;
             }
+            
+            console.log('✅ 유효성 검사 통과');
 
             // 전송 중 상태 표시
             const submitBtn = this.querySelector('button[type="submit"]');
