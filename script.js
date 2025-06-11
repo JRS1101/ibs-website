@@ -237,11 +237,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // 폼 데이터 수집
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
             const company = document.getElementById('company').value;
             const message = document.getElementById('message').value;
             
             // 유효성 검사
-            if (!name || !email || !company || !message) {
+            if (!name || !email || !phone || !company || !message) {
                 showNotification('모든 필드를 채워주세요.', 'error');
                 return;
             }
@@ -258,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
 
             // 폼 데이터 객체 생성
-            const formData = { name, email, company, message };
+            const formData = { name, email, phone, company, message };
 
             // Google Sheets에 먼저 저장 (로컬 백업용)
             const sheetsSuccess = await sendToGoogleSheets(formData);
@@ -269,6 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const templateParams = {
                     from_name: name,
                     from_email: email,
+                    phone: phone,
                     company: company,
                     message: message,
                     to_email: 'ibs@ibs-info.com', // 받는 이메일

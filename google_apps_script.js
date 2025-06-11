@@ -7,15 +7,36 @@ const SHEET_NAME = 'I.B.S 문의내역'; // 시트 이름
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    // 폼 데이터 파싱 (form submit 방식 지원)
+    let inquiryData;
     
-    if (data.action === 'addInquiry') {
-      return addInquiry(data.data);
+    if (e.postData && e.postData.contents) {
+      // JSON 방식
+      const data = JSON.parse(e.postData.contents);
+      if (data.action === 'addInquiry') {
+        inquiryData = data.data;
+      } else {
+        inquiryData = data;
+      }
+    } else if (e.parameter && e.parameter.data) {
+      // Form submit 방식 (CORS 우회용)
+      inquiryData = JSON.parse(e.parameter.data);
+    } else {
+      throw new Error('No valid data found');
     }
     
-    return ContentService
-      .createTextOutput(JSON.stringify({success: false, error: 'Invalid action'}))
-      .setMimeType(ContentService.MimeType.JSON);
+    // 타임스탬프 추가
+    inquiryData.timestamp = new Date().toLocaleString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    
+    return addInquiry(inquiryData);
       
   } catch (error) {
     Logger.log('Error: ' + error.toString());
@@ -42,6 +63,7 @@ function addInquiry(inquiryData) {
       inquiryData.timestamp,
       inquiryData.name,
       inquiryData.email,
+      inquiryData.phone,
       inquiryData.company,
       inquiryData.message,
       '🆕 신규' // 이모지 추가
@@ -77,7 +99,7 @@ function addInquiry(inquiryData) {
 // 예쁜 테이블 초기 설정
 function setupPrettyTable(sheet) {
   // 헤더 데이터
-  const headers = ['📅 접수일시', '👤 이름', '📧 이메일', '🏢 회사명', '💬 문의내용', '📊 상태'];
+  const headers = ['📅 접수일시', '👤 이름', '📧 이메일', '📞 전화번호', '🏢 회사명', '💬 문의내용', '📊 상태'];
   
   // 헤더 추가
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
@@ -95,12 +117,13 @@ function setupPrettyTable(sheet) {
   headerRange.setBorder(true, true, true, true, true, true, '#ffffff', SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
   
   // 열 너비 최적화
-  sheet.setColumnWidth(1, 180); // 접수일시 - 넓게
-  sheet.setColumnWidth(2, 100); // 이름
-  sheet.setColumnWidth(3, 220); // 이메일 - 넓게
-  sheet.setColumnWidth(4, 150); // 회사명
-  sheet.setColumnWidth(5, 350); // 문의내용 - 가장 넓게
-  sheet.setColumnWidth(6, 100); // 상태
+  sheet.setColumnWidth(1, 160); // 접수일시
+  sheet.setColumnWidth(2, 80);  // 이름
+  sheet.setColumnWidth(3, 200); // 이메일
+  sheet.setColumnWidth(4, 130); // 전화번호
+  sheet.setColumnWidth(5, 130); // 회사명
+  sheet.setColumnWidth(6, 300); // 문의내용 - 가장 넓게
+  sheet.setColumnWidth(7, 80);  // 상태
   
   // 행 높이 설정
   sheet.setRowHeight(1, 40); // 헤더 행 높이
@@ -114,7 +137,7 @@ function setupPrettyTable(sheet) {
 
 // 새 행 스타일링
 function stylizeNewRow(sheet, rowNumber) {
-  const range = sheet.getRange(rowNumber, 1, 1, 6);
+  const range = sheet.getRange(rowNumber, 1, 1, 7);
   
   // 교대로 배경색 설정 (더 예쁜 색상)
   if (rowNumber % 2 === 0) {
@@ -134,15 +157,16 @@ function stylizeNewRow(sheet, rowNumber) {
   sheet.getRange(rowNumber, 1).setHorizontalAlignment('center'); // 접수일시 - 중앙
   sheet.getRange(rowNumber, 2).setHorizontalAlignment('center'); // 이름 - 중앙
   sheet.getRange(rowNumber, 3).setHorizontalAlignment('left');   // 이메일 - 왼쪽
-  sheet.getRange(rowNumber, 4).setHorizontalAlignment('center'); // 회사명 - 중앙
-  sheet.getRange(rowNumber, 5).setHorizontalAlignment('left');   // 문의내용 - 왼쪽
-  sheet.getRange(rowNumber, 6).setHorizontalAlignment('center'); // 상태 - 중앙
+  sheet.getRange(rowNumber, 4).setHorizontalAlignment('center'); // 전화번호 - 중앙
+  sheet.getRange(rowNumber, 5).setHorizontalAlignment('center'); // 회사명 - 중앙
+  sheet.getRange(rowNumber, 6).setHorizontalAlignment('left');   // 문의내용 - 왼쪽
+  sheet.getRange(rowNumber, 7).setHorizontalAlignment('center'); // 상태 - 중앙
   
   // 행 높이 설정 (내용에 따라 자동 조정)
   sheet.setRowHeight(rowNumber, 60);
   
   // 문의내용 셀 텍스트 자동 줄바꿈
-  sheet.getRange(rowNumber, 5).setWrap(true);
+  sheet.getRange(rowNumber, 6).setWrap(true);
 }
 
 // 조건부 서식 (상태별 색상)
@@ -151,21 +175,21 @@ function addConditionalFormatting(sheet) {
   const newRule = SpreadsheetApp.newConditionalFormatRule()
     .whenTextContains('신규')
     .setBackground('#e3f2fd')
-    .setRanges([sheet.getRange('F:F')])
+    .setRanges([sheet.getRange('G:G')])
     .build();
     
   // 진행중 상태 - 연한 주황색
   const progressRule = SpreadsheetApp.newConditionalFormatRule()
     .whenTextContains('진행중')
     .setBackground('#fff3e0')
-    .setRanges([sheet.getRange('F:F')])
+    .setRanges([sheet.getRange('G:G')])
     .build();
     
   // 완료 상태 - 연한 초록색
   const doneRule = SpreadsheetApp.newConditionalFormatRule()
     .whenTextContains('완료')
     .setBackground('#e8f5e8')
-    .setRanges([sheet.getRange('F:F')])
+    .setRanges([sheet.getRange('G:G')])
     .build();
   
   // 규칙 적용

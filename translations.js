@@ -76,6 +76,7 @@ const translations = {
         contact_form_title: "온라인 문의 폼",
         form_name: "이름",
         form_email: "이메일",
+        form_phone: "전화번호",
         form_company: "회사명",
         form_message: "문의내용"
     },
@@ -156,6 +157,7 @@ const translations = {
         contact_form_title: "Online Inquiry Form",
         form_name: "Name",
         form_email: "Email",
+        form_phone: "Phone Number",
         form_company: "Company",
         form_message: "Message"
     },
@@ -236,6 +238,7 @@ const translations = {
         contact_form_title: "オンラインお問い合わせフォーム",
         form_name: "お名前",
         form_email: "メールアドレス",
+        form_phone: "電話番号",
         form_company: "会社名",
         form_message: "お問い合わせ内容"
     },
@@ -316,6 +319,7 @@ const translations = {
         contact_form_title: "在线咨询表单",
         form_name: "姓名",
         form_email: "邮箱",
+        form_phone: "电话号码",
         form_company: "公司名",
         form_message: "咨询内容"
     }
