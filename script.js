@@ -186,6 +186,9 @@ document.addEventListener('DOMContentLoaded', function() {
     async function sendToGoogleSheets(formData) {
         try {
             console.log('📊 Google Sheets로 데이터 전송 시작...');
+            console.log('📍 사용할 URL:', GOOGLE_SHEETS_URL);
+            console.log('📋 전송할 데이터:', formData);
+            
             // Form submit 방식으로 CORS 우회
             const form = document.createElement('form');
             form.method = 'POST';
@@ -193,12 +196,21 @@ document.addEventListener('DOMContentLoaded', function() {
             form.target = 'hidden_iframe';
             form.style.display = 'none';
 
-            // JSON 데이터를 hidden input으로 추가
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'data';
-            input.value = JSON.stringify(formData);
-            form.appendChild(input);
+            // 각 폼 데이터를 개별 input으로 추가 (더 확실한 방법)
+            Object.keys(formData).forEach(key => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = formData[key] || '';
+                form.appendChild(input);
+            });
+
+            // 추가로 JSON 형태도 보내기
+            const jsonInput = document.createElement('input');
+            jsonInput.type = 'hidden';
+            jsonInput.name = 'data';
+            jsonInput.value = JSON.stringify(formData);
+            form.appendChild(jsonInput);
 
             // Hidden iframe 생성 (응답 받기용)
             let iframe = document.getElementById('hidden_iframe');
@@ -210,15 +222,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.appendChild(iframe);
             }
 
-            // Form을 DOM에 추가하고 submit
-            document.body.appendChild(form);
-            form.submit();
+            // iframe load 이벤트로 응답 확인
+            return new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => {
+                    console.log('⚠️ 타임아웃: 5초 내에 응답 없음');
+                    resolve({ success: true, timeout: true });
+                }, 5000);
 
-            // Form 제거
-            document.body.removeChild(form);
+                iframe.onload = function() {
+                    clearTimeout(timeout);
+                    console.log('✅ iframe 로드 완료 - doPost 호출됨');
+                    resolve({ success: true });
+                };
 
-            console.log('✅ Google Sheets 전송 완료');
-            return { success: true };
+                // Form을 DOM에 추가하고 submit
+                document.body.appendChild(form);
+                console.log('🚀 Form submit 실행...');
+                form.submit();
+
+                // Form 제거
+                setTimeout(() => {
+                    if (document.body.contains(form)) {
+                        document.body.removeChild(form);
+                    }
+                }, 1000);
+            });
+
         } catch (error) {
             console.error('❌ Google Sheets 전송 실패:', error);
             throw error;
