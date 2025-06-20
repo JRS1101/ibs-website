@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management System - InnoBridge SOLUTION I.B.S</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* A4 Page Setup for Print */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        /* Base body styles */
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* Control panel - Hidden during print */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            min-width: 320px;
+            max-width: 350px;
+            border: 2px solid #1565c0;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .control-panel h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .control-group {
+            margin-bottom: 12px;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 12px;
+        }
+
+        .control-group input,
+        .control-group select,
+        .control-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: inherit;
+        }
+
+        .control-group textarea {
+            height: 60px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1565c0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0d47a1;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #388e3c;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #f57c00;
+        }
+
+        .btn-info {
+            background: #00bcd4;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #0097a7;
+        }
+
+        /* Screen container */
+        .screen-container {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            margin-right: 400px; /* 컨트롤 패널 공간 더 확보 */
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 10mm;
+        }
+
+        /* Print container */
+        .print-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Document header */
+        .document-header {
+            background: white;
+            color: #333;
+            padding: 6mm 5mm;
+            margin: -10mm -10mm 4mm -10mm;
+            text-align: center;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .document-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 2mm;
+            letter-spacing: 1px;
+        }
+
+        .document-subtitle {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        /* Company information section */
+        .company-info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4mm;
+            margin-bottom: 3mm;
+        }
+
+        .info-block {
+            background: #f5f5f5;
+            padding: 3mm;
+            border-radius: 2mm;
+            border-left: 3mm solid #1565c0;
+        }
+
+        .info-block h3 {
+            color: #1565c0;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 2mm;
+            text-align: center;
+            padding: 1mm;
+            background: white;
+            border-radius: 1mm;
+        }
+
+        .info-item {
+            display: flex;
+            margin-bottom: 1mm;
+            font-size: 9px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #1565c0;
+            width: 35mm;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Transaction details */
+        .transaction-details {
+            background: #e8f4fd;
+            padding: 3mm;
+            border-radius: 2mm;
+            margin-bottom: 3mm;
+            border: 1px solid #90caf9;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2mm;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 2mm;
+            border-radius: 1mm;
+            text-align: center;
+            border: 1px solid #e3f2fd;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #1565c0;
+            font-size: 9px;
+            margin-bottom: 1mm;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+            font-size: 11px;
+        }
+
+        /* Items table */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 3mm;
+            background: white;
+            border: 2px solid #1565c0;
+            border-radius: 2mm;
+            overflow: hidden;
+        }
+
+        .items-table th {
+            background: linear-gradient(135deg, #1565c0, #0d47a1);
+            color: white;
+            padding: 2mm;
+            text-align: center;
+            font-weight: 600;
+            font-size: 9px;
+            border: 1px solid #0d47a1;
+        }
+
+        .items-table td {
+            padding: 1.5mm;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 8px;
+            vertical-align: middle;
+        }
+
+        .items-table .spec-cell {
+            text-align: left;
+            font-size: 9px;
+            line-height: 1.3;
+            max-width: 80mm;
+        }
+
+        .amount-cell {
+            font-weight: 600;
+            color: #1565c0;
+            text-align: right;
+        }
+
+        .items-table tbody tr:nth-child(odd) {
+            background-color: #f8f9fa;
+        }
+
+        /* 🎯 아이템 테이블 입력 필드 스타일 */
+        .item-description, .item-quantity, .item-price {
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 4px;
+            font-size: 10px;
+            font-family: inherit;
+            border-radius: 2px;
+            background: white;
+        }
+
+        .item-description {
+            min-height: 40px;
+            resize: vertical;
+        }
+
+        .item-quantity, .item-price {
+            text-align: right;
+        }
+
+        .btn-remove {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            cursor: pointer;
+        }
+
+        .btn-remove:hover {
+            background: #d32f2f;
+        }
+
+        .item-amount {
+            text-align: right;
+            font-weight: 600;
+            color: #1565c0;
+            padding: 4px;
+        }
+
+        /* 인쇄 시 입력 필드 스타일 조정 */
+        @media print {
+            .item-description, .item-quantity, .item-price {
+                border: none;
+                background: transparent;
+                outline: none;
+            }
+            
+            .btn-remove {
+                display: none;
+            }
+        }
+
+        /* Summary section */
+        .summary-section {
+            display: grid;
+            grid-template-columns: 1fr 70mm;
+            gap: 4mm;
+            margin-bottom: 3mm;
+        }
+
+        .notes-section {
+            background: #fff3e0;
+            padding: 3mm;
+            border-radius: 2mm;
+            border-left: 3mm solid #ff9800;
+        }
+
+        .notes-section h3 {
+            color: #e65100;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 2mm;
+        }
+
+        .notes-section ol {
+            padding-left: 3mm;
+        }
+
+        .notes-section li {
+            margin-bottom: 1mm;
+            font-size: 7px;
+            line-height: 1.3;
+            color: #bf360c;
+        }
+
+        /* Totals summary */
+        .totals-summary {
+            background: white;
+            border: 2px solid #1565c0;
+            border-radius: 3mm;
+            overflow: hidden;
+        }
+
+        .totals-header {
+            background: #1565c0;
+            color: white;
+            padding: 3mm;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .totals-body {
+            padding: 4mm;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2mm 0;
+            border-bottom: 1px dotted #ccc;
+            font-size: 10px;
+        }
+
+        .total-row.highlight {
+            background: #e3f2fd;
+            margin: 0 -4mm;
+            padding: 2mm 4mm;
+            border-radius: 2mm;
+            border-bottom: none;
+        }
+
+        .total-row:last-child {
+            border-bottom: none;
+            border-top: 2px solid #1565c0;
+            padding-top: 3mm;
+            margin-top: 3mm;
+            font-size: 14px;
+            font-weight: bold;
+            color: #1565c0;
+        }
+
+        .total-label {
+            font-weight: 600;
+        }
+
+        .total-amount {
+            font-weight: 600;
+            color: #1565c0;
+        }
+
+        /* Payment info */
+        .payment-info {
+            background: #e8f5e8;
+            padding: 2mm;
+            border-radius: 2mm;
+            margin: 2mm 0;
+            border-left: 3mm solid #4caf50;
+        }
+
+        .payment-info h3 {
+            color: #2e7d32;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 1mm;
+        }
+
+        /* 직인 섹션 */
+        .seal-section {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin: 3mm 0;
+            padding: 0 10mm;
+        }
+
+        .seal-info {
+            text-align: left;
+            font-size: 10px;
+            color: #333;
+        }
+
+        .seal-info .company-name {
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 1mm;
+        }
+
+        .representative-with-seal {
+            display: flex;
+            align-items: center;
+            gap: 3mm;
+        }
+
+        .seal-info .representative {
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .company-seal {
+            position: relative;
+            width: 15mm;
+            height: 15mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .seal-image {
+            width: 15mm;
+            height: 15mm;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .seal-fallback {
+            display: inline-block;
+            width: 15mm;
+            height: 15mm;
+            border: 2px solid #1565c0;
+            border-radius: 50%;
+            line-height: 15mm;
+            text-align: center;
+            font-size: 7px;
+            font-weight: bold;
+            color: #1565c0;
+            background: white;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3mm;
+            padding: 2mm 0;
+            text-align: center;
+            font-size: 8px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .footer p {
+            margin: 0 0 1mm 0;
+        }
+
+        .footer p:last-child {
+            font-size: 7px;
+            color: #999;
+            margin: 0;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .control-panel {
+                display: none !important;
+            }
+            
+            .screen-container {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+                min-height: auto;
+            }
+        }
+
+        /* 반응형 디자인 - 작은 화면에서는 컨트롤 패널을 아래로 */
+        @media screen and (max-width: 1400px) {
+            .control-panel {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px auto;
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .screen-container {
+                margin: 20px auto;
+                margin-right: auto;
+            }
+        }
+
+        /* 모바일에서는 컨트롤 패널을 상단에 */
+        @media screen and (max-width: 768px) {
+            .control-panel {
+                margin: 10px;
+                padding: 15px;
+                min-width: auto;
+            }
+            
+            .screen-container {
+                width: 100%;
+                margin: 10px;
+                padding: 5mm;
+            }
+            
+            .button-group {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 🎯 통합 인보이스 관리 패널 -->
+    <div class="control-panel">
+        <h3>📄 IBS 인보이스 시스템</h3>
+        
+        <div class="control-group">
+            <label>📋 견적서 불러오기</label>
+            <select id="quotationSelect" onchange="loadSelectedQuotation()">
+                <option value="">새로 작성하기</option>
+                <!-- 구글시트에서 동적으로 로드됨 -->
+            </select>
+            <button class="btn btn-info" onclick="refreshQuotationList()" style="width: 100%; margin-top: 5px;">
+                🔄 견적서 목록 새로고침
+            </button>
+        </div>
+
+        <div class="control-group">
+            <label>인보이스 번호</label>
+            <input type="text" id="invoice-number" placeholder="INV-2025-001">
+        </div>
+
+        <div class="control-group">
+            <label>발행일</label>
+            <input type="date" id="invoice-date">
+        </div>
+
+        <div class="control-group">
+            <label>결제 기한</label>
+            <input type="date" id="due-date">
+        </div>
+
+        <div class="control-group">
+            <label>고객 회사명</label>
+            <input type="text" id="company-name" placeholder="회사명">
+        </div>
+
+        <div class="control-group">
+            <label>담당자명</label>
+            <input type="text" id="customer-name" placeholder="담당자명">
+        </div>
+
+        <div class="control-group">
+            <label>연락처</label>
+            <input type="text" id="customer-phone" placeholder="전화번호">
+        </div>
+
+        <div class="control-group">
+            <label>이메일</label>
+            <input type="email" id="customer-email" placeholder="이메일 주소">
+        </div>
+
+        <div class="control-group">
+            <label>주소</label>
+            <textarea id="customer-address" placeholder="고객 주소"></textarea>
+        </div>
+
+        <div class="control-group">
+            <label>세율 (%)</label>
+            <input type="number" id="tax-rate" value="10" min="0" max="100" step="0.1">
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-success" onclick="saveToGoogleSheets()">📊 구글시트 저장</button>
+            <button class="btn btn-primary" onclick="openGoogleSheet()">📋 시트 열기</button>
+            <button class="btn btn-warning" onclick="printInvoice()">🖨️ 인쇄</button>
+            <button class="btn btn-info" onclick="emailInvoice()">📧 이메일</button>
+        </div>
+    </div>
+
+    <!-- Main Invoice Document -->
+    <div class="screen-container">
+        <div class="print-container">
+            <!-- Document Header -->
+            <div class="document-header" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="images/logo/회사로고.jpg" alt="IBS Company Logo" style="height: 60px; width: auto; background: transparent; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 6px; transition: transform 0.2s ease;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="logo-fallback" style="display: none; align-items: center; justify-content: center; width: 120px; height: 60px; background: linear-gradient(135deg, #2c5aa0, #1e3f73); color: white; border-radius: 6px; font-size: 14px; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        IBS<br>SOLUTION
+                    </div>
+                    <div style="font-size: 26px; font-weight: bold; color: #1e3f73; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                        아이비에스<br><span style="font-size:14px; font-weight:normal; color:#666; letter-spacing:2px;">INNOVATION BRIDGE SOLUTION</span>
+                    </div>
+                </div>
+                <div style="text-align: right; line-height: 1.2;">
+                    <span style="color: #2c5aa0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); font-weight: 900; font-size: 32px;">I.B.S</span><br>
+                    <span style="font-size:18px; font-weight:normal; color:#666;">인보이스 (Invoice)</span>
+                </div>
+            </div>
+
+            <!-- Company and Customer Information -->
+            <div class="company-info-section">
+                <div class="info-block">
+                    <h3>Service Provider Information</h3>
+                    <div class="info-item">
+                        <span class="info-label">Company:</span>
+                        <span class="info-value">InnoBridge SOLUTION I.B.S</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Address:</span>
+                        <span class="info-value">52-5, Yuljeondong 417beon-gil, Jangan-gu, Suwon-si</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Business Registration No:</span>
+                        <span class="info-value">405-08-53668</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Representative:</span>
+                        <span class="info-value">Jun-ro Lee</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">010-3664-6268</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">ibs@ibs-info.com</span>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <h3>Bill To Information</h3>
+                    <div class="info-item">
+                        <span class="info-label">Company:</span>
+                        <span class="info-value" id="displayCustomerCompany">I.N.T</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Address:</span>
+                        <span class="info-value">Jangan-gu, Suwon-si, Gyeonggi-do</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Business Registration No:</span>
+                        <span class="info-value" id="displayCustomerBusinessId">123-45-67890</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Representative:</span>
+                        <span class="info-value" id="displayCustomerRepresentative">[Representative Name]</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">010-3664-6268</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">atecam@naver.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice Details -->
+            <div class="transaction-details">
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Invoice No</div>
+                        <div class="detail-value" id="displayInvoiceNumber">INV-2025-001</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Issue Date</div>
+                        <div class="detail-value" id="displayIssueDate">2025-06-12</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Due Date</div>
+                        <div class="detail-value" id="displayDueDate">2025-07-12</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Payment Terms</div>
+                        <div class="detail-value">Prepayment</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Project Name</div>
+                        <div class="detail-value" id="displayProjectName">JIG Manufacturing</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value" id="displayStatus">Completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th style="width: 6%">NO</th>
+                        <th style="width: 22%">Service/Product</th>
+                        <th style="width: 36%">Specification</th>
+                        <th style="width: 8%">Qty</th>
+                        <th style="width: 14%">Unit Price($)</th>
+                        <th style="width: 14%">Amount($)</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsTableBody">
+                    <tr>
+                        <td>1</td>
+                        <td>Software Training</td>
+                        <td class="spec-cell">CAM350 Training - Professional software training program</td>
+                        <td>1</td>
+                        <td class="amount-cell">250,000</td>
+                        <td class="amount-cell">250,000</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>JIG Manufacturing Service</td>
+                        <td class="spec-cell">30 dia JIG manufacturing - Precision custom JIG design and manufacturing</td>
+                        <td>1</td>
+                        <td class="amount-cell">50,000</td>
+                        <td class="amount-cell">50,000</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>-</td>
+                        <td class="spec-cell">-</td>
+                        <td>1</td>
+                        <td class="amount-cell">0</td>
+                        <td class="amount-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>-</td>
+                        <td class="spec-cell">-</td>
+                        <td>1</td>
+                        <td class="amount-cell">0</td>
+                        <td class="amount-cell">0</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Payment Information -->
+            <div class="payment-info">
+                <h3>Payment Information</h3>
+                <p><strong>Payment Terms:</strong> Prepayment &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Bank Account:</strong> [Bank Name] [Account Number] InnoBridge SOLUTION I.B.S</p>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="notes-section">
+                    <h3>Notes / Terms and Conditions</h3>
+                    <ol>
+                        <li>This invoice certifies the supply of the above items.</li>
+                        <li>The above amount includes VAT.</li>
+                        <li>Other matters not specified are subject to general commercial practices.</li>
+                    </ol>
+                </div>
+
+                <div class="totals-summary">
+                    <div class="totals-header">
+                        Amount Summary
+                    </div>
+                    <div class="totals-body">
+                        <div class="total-row">
+                            <span class="total-label">Subtotal:</span>
+                            <span class="total-amount" id="displaySubtotal">$300,000</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Discount:</span>
+                            <span class="total-amount" id="displayDiscount">-$10,000</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Additional Service:</span>
+                            <span class="total-amount" id="displayAdditionalService">$1,000</span>
+                        </div>
+                        <div class="total-row highlight">
+                            <span class="total-label">Total Supply Amount:</span>
+                            <span class="total-amount" id="displayNetAmount">$291,000</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">VAT(10%):</span>
+                            <span class="total-amount" id="displayVat">$29,100</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Total Amount:</span>
+                            <span class="total-amount" id="displayTotalAmount">$320,100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seal Section -->
+            <div class="seal-section">
+                <div class="seal-info">
+                    <div class="company-name">InnoBridge SOLUTION I.B.S</div>
+                    <div class="representative-with-seal">
+                        <div class="representative">Representative : Jun-ro Lee</div>
+                        <div class="company-seal">
+                            <img src="images/아이비에스직인.jpg" alt="아이비에스 직인" class="seal-image" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                            <div class="seal-fallback" style="display: none;">(Seal)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>This invoice is issued by InnoBridge SOLUTION I.B.S.</p>
+                <p>If you have any questions, please contact us anytime. | ibs@ibs-info.com | 010-3664-6268</p>
+                <p>© 2025 InnoBridge SOLUTION I.B.S. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let isCollapsed = false;
+        let trendChart = null;
+
+        // 🎯 통합 설정 상수
+        const IBS_CONFIG = {
+            API_URL: 'https://script.google.com/macros/s/AKfycbyiJqdmcmKy7C10iGfcQtVjA3DdIEOROhOn9vzDhhQE1DGd8Ulh4a0mKgL6AcKopH0xxA/exec',
+            TIMEOUT: 5000,
+            REFRESH_INTERVAL: 5 * 60 * 1000
+        };
+
+        // 🔧 공통 유틸리티 함수
+        const IBS_UTILS = {
+            formatNumber: (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+            parseNumber: (str) => parseFloat(str.toString().replace(/,/g, '')) || 0,
+            showLoading: (show, element) => {
+                if (element) {
+                    element.disabled = show;
+                    if (show) {
+                        element.dataset.originalText = element.textContent;
+                        element.textContent = '🔄 처리 중...';
+                    } else {
+                        element.textContent = element.dataset.originalText || element.textContent;
+                    }
+                }
+            },
+            formatCurrency: (amount) => '₩' + IBS_UTILS.formatNumber(amount),
+            showMessage: (message, type = 'info') => {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; z-index: 9999;
+                    background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                    color: white; padding: 10px 20px; border-radius: 5px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }
+        };
+
+        // 🔗 견적서 목록 가져오기 (구글시트에서)
+        async function refreshQuotationList() {
+            console.log('🔄 견적서 목록 새로고침 시작');
+            const select = document.getElementById('quotationSelect');
+            const refreshBtn = document.querySelector('[onclick="refreshQuotationList()"]');
+            
+            try {
+                IBS_UTILS.showLoading(true, refreshBtn);
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), IBS_CONFIG.TIMEOUT);
+                
+                const response = await fetch(`${IBS_CONFIG.API_URL}?action=getQuotationList`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ 견적서 목록 조회 성공:', data);
+                    
+                    // 기존 옵션 제거 (첫 번째 제외)
+                    select.innerHTML = '<option value="">새로 작성하기</option>';
+                    
+                    // 견적서 목록 추가
+                    if (data.quotations && data.quotations.length > 0) {
+                        data.quotations.forEach(quotation => {
+                            const option = document.createElement('option');
+                            option.value = quotation.quoteNumber;
+                            option.textContent = `${quotation.quoteNumber} - ${quotation.projectName} (${quotation.clientCompany})`;
+                            select.appendChild(option);
+                        });
+                        IBS_UTILS.showMessage(`✅ ${data.quotations.length}개의 견적서를 불러왔습니다.`, 'success');
+                    } else {
+                        IBS_UTILS.showMessage('⚠️ 저장된 견적서가 없습니다.', 'info');
+                    }
+                    
+                } else {
+                    throw new Error('견적서 목록 조회 실패');
+                }
+                
+            } catch (error) {
+                console.log('❌ 견적서 목록 조회 실패:', error.name);
+                console.log('🔄 Mock 데이터 사용으로 전환');
+                
+                // API 실패 시 실제 구글시트 데이터 기반 Mock 데이터 사용
+                const mockQuotations = [
+                    {
+                        quoteNumber: 'IBS-2025-001',
+                        projectName: 'ㅂㅂㅂ',
+                        clientCompany: 'ㅂㅂㅂ',
+                        clientContact: 'ㅂㅂㅂ',
+                        totalAmount: 1760000,
+                        quoteDate: '2025-06-16',
+                        items: [
+                            { name: '기술 컨설팅', specs: 'ZZZZ', quantity: 1, unitPrice: 1500000, amount: 1500000 },
+                            { name: '프로그래밍 서비스', specs: 'ZZZZ', quantity: 1, unitPrice: 200000, amount: 200000 }
+                        ]
+                    },
+                    {
+                        quoteNumber: 'IBS-2025-002',
+                        projectName: 'ㅂㅂㅂ',
+                        clientCompany: 'ㅂㅂㅂ',
+                        clientContact: 'ㅂㅂㅂ',
+                        totalAmount: 2387000,
+                        quoteDate: '2025-06-16',
+                        items: [
+                            { name: '기술 컨설팅', specs: 'ZZZZ', quantity: 1, unitPrice: 1500000, amount: 1500000 },
+                            { name: '프로그래밍 서비스', specs: 'ZZZZ', quantity: 1, unitPrice: 200000, amount: 200000 },
+                            { name: '소프트웨어 교육', specs: 'zzz', quantity: 1, unitPrice: 500000, amount: 500000 }
+                        ]
+                    }
+                ];
+                
+                // Mock 데이터로 드롭다운 채우기
+                select.innerHTML = '<option value="">새로 작성하기</option>';
+                mockQuotations.forEach(quotation => {
+                    const option = document.createElement('option');
+                    option.value = quotation.quoteNumber;
+                    option.textContent = `${quotation.quoteNumber} - ${quotation.projectName} (${quotation.clientCompany}) - ₩${quotation.totalAmount.toLocaleString()}`;
+                    select.appendChild(option);
+                });
+                
+                IBS_UTILS.showMessage(`🔄 API 연결 실패로 Mock 데이터 사용 중 (${mockQuotations.length}개 견적서)`, 'info');
+                
+                // Mock 데이터를 전역 변수에 저장하여 loadSelectedQuotation에서 사용
+                window.mockQuotationData = {};
+                mockQuotations.forEach(q => {
+                    window.mockQuotationData[q.quoteNumber] = q;
+                });
+                
+            } finally {
+                IBS_UTILS.showLoading(false, refreshBtn);
+            }
+        }
+
+        // 📋 선택된 견적서 데이터 로드
+        async function loadSelectedQuotation() {
+            const select = document.getElementById('quotationSelect');
+            const selectedQuoteNumber = select.value;
+            
+            if (!selectedQuoteNumber) {
+                console.log('ℹ️ 견적서 선택 해제 - 폼 초기화');
+                return;
+            }
+            
+            console.log('📋 선택된 견적서:', selectedQuoteNumber);
+            
+            try {
+                IBS_UTILS.showMessage('🔄 견적서 데이터를 불러오는 중...', 'info');
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), IBS_CONFIG.TIMEOUT);
+                
+                const response = await fetch(`${IBS_CONFIG.API_URL}?action=getQuotationData&quoteNumber=${selectedQuoteNumber}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ 견적서 데이터 로드 성공:', data);
+                    
+                    if (data.quotation) {
+                        populateInvoiceForm(data.quotation);
+                        IBS_UTILS.showMessage('✅ 견적서 데이터가 성공적으로 로드되었습니다!', 'success');
+                    } else {
+                        throw new Error('견적서 데이터가 없습니다.');
+                    }
+                    
+                } else {
+                    throw new Error('견적서 데이터 조회 실패');
+                }
+                
+            } catch (error) {
+                console.log('❌ 견적서 데이터 로드 실패:', error.name);
+                console.log('🔄 Mock 데이터 사용으로 전환');
+                
+                // API 실패 시 Mock 데이터 사용
+                if (window.mockQuotationData && window.mockQuotationData[selectedQuoteNumber]) {
+                    const mockQuotation = window.mockQuotationData[selectedQuoteNumber];
+                    console.log('📋 Mock 데이터 사용:', mockQuotation);
+                    
+                    populateInvoiceForm(mockQuotation);
+                    IBS_UTILS.showMessage(`🔄 Mock 데이터로 ${selectedQuoteNumber} 로드 완료`, 'info');
+                } else {
+                    IBS_UTILS.showMessage(`❌ ${selectedQuoteNumber} 데이터를 찾을 수 없습니다.`, 'error');
+                }
+            }
+        }
+
+        // 📝 견적서 데이터로 인보이스 폼 자동 채우기
+        function populateInvoiceForm(quotation) {
+            console.log('📝 인보이스 폼 자동 채우기 시작:', quotation);
+            
+            // 고객 정보 - 컨트롤 패널
+            const companyName = document.getElementById('company-name');
+            const customerName = document.getElementById('customer-name');
+            const customerEmail = document.getElementById('customer-email');
+            const customerPhone = document.getElementById('customer-phone');
+            const customerAddress = document.getElementById('customer-address');
+
+            if (companyName) companyName.value = quotation.clientCompany || '';
+            if (customerName) customerName.value = quotation.clientContact || '';
+            if (customerEmail) customerEmail.value = quotation.clientEmail || '';
+            if (customerPhone) customerPhone.value = quotation.clientPhone || '';
+            if (customerAddress) customerAddress.value = quotation.clientAddress || '';
+
+            // 고객 정보 - 문서 내 표시
+            const displayCustomerCompany = document.getElementById('displayCustomerCompany');
+            const displayCustomerBusinessId = document.getElementById('displayCustomerBusinessId');
+            const displayCustomerRepresentative = document.getElementById('displayCustomerRepresentative');
+
+            if (displayCustomerCompany) displayCustomerCompany.textContent = quotation.clientCompany || 'I.N.T';
+            if (displayCustomerBusinessId) displayCustomerBusinessId.textContent = quotation.clientBusinessId || '123-45-67890';
+            if (displayCustomerRepresentative) displayCustomerRepresentative.textContent = quotation.clientContact || '[Representative Name]';
+
+            // 인보이스 정보 - 컨트롤 패널
+            const invoiceDate = document.getElementById('invoice-date');
+            const dueDate = document.getElementById('due-date');
+            const invoiceNumber = document.getElementById('invoice-number');
+
+            if (invoiceDate) invoiceDate.value = new Date().toISOString().split('T')[0];
+            if (dueDate) {
+                const due = new Date();
+                due.setDate(due.getDate() + 30); // 30일 후
+                dueDate.value = due.toISOString().split('T')[0];
+            }
+            
+            // 인보이스 번호 자동 생성 (견적번호 기반)
+            const invoiceNo = quotation.quoteNumber ? quotation.quoteNumber.replace('IBS-', 'INV-') : `INV-${Date.now()}`;
+            if (invoiceNumber) invoiceNumber.value = invoiceNo;
+
+            // 인보이스 정보 - 문서 내 표시
+            const displayInvoiceNumber = document.getElementById('displayInvoiceNumber');
+            const displayIssueDate = document.getElementById('displayIssueDate');
+            const displayDueDate = document.getElementById('displayDueDate');
+            const displayProjectName = document.getElementById('displayProjectName');
+
+            if (displayInvoiceNumber) displayInvoiceNumber.textContent = invoiceNo;
+            if (displayIssueDate) displayIssueDate.textContent = new Date().toISOString().split('T')[0];
+            if (displayDueDate) {
+                const due = new Date();
+                due.setDate(due.getDate() + 30);
+                displayDueDate.textContent = due.toISOString().split('T')[0];
+            }
+            if (displayProjectName) displayProjectName.textContent = quotation.projectName || 'JIG Manufacturing';
+
+            // 아이템 정보 업데이트 (거래명세서 스타일)
+            populateItemsTable(quotation.items || []);
+            
+            // 금액 정보 업데이트
+            updateAmountFields(quotation);
+            
+            console.log('✅ 인보이스 폼 자동 채우기 완료');
+        }
+
+        // 품목 테이블 업데이트 (항상 4개 항목 보장)
+        function populateItemsTable(items) {
+            const tableBody = document.getElementById('itemsTableBody');
+            if (!tableBody) return;
+            
+            // 기존 테이블 내용 초기화
+            tableBody.innerHTML = '';
+            
+            // 유효한 견적서 품목들 필터링
+            const validItems = items ? items.filter(item => 
+                item.serviceName && 
+                item.serviceName !== '-' && 
+                item.serviceName !== '직접입력' && 
+                item.serviceName.trim() !== ''
+            ) : [];
+            
+            // 항상 4개 행 생성
+            for (let i = 0; i < 4; i++) {
+                const row = document.createElement('tr');
+                
+                if (validItems[i]) {
+                    // 견적서 데이터가 있는 경우
+                    const item = validItems[i];
+                    const serviceName = item.serviceName || '';
+                    const specification = item.specification || '';
+                    row.innerHTML = `
+                        <td>${i + 1}</td>
+                        <td>${serviceName}</td>
+                        <td class="spec-cell">${specification}</td>
+                        <td>${item.quantity || 1}</td>
+                        <td class="amount-cell">${formatNumber(item.unitPrice || 0)}</td>
+                        <td class="amount-cell">${formatNumber(item.amount || 0)}</td>
+                    `;
+                } else {
+                    // 빈 행으로 채우기
+                    row.innerHTML = `
+                        <td>${i + 1}</td>
+                        <td>-</td>
+                        <td class="spec-cell">-</td>
+                        <td>1</td>
+                        <td class="amount-cell">0</td>
+                        <td class="amount-cell">0</td>
+                    `;
+                }
+                tableBody.appendChild(row);
+            }
+            
+            console.log(`✅ 인보이스 항목 4개 보장 완료 (유효 항목: ${validItems.length}개)`);
+        }
+
+        // 금액 필드 업데이트
+        function updateAmountFields(quotation) {
+            // 소계
+            if (document.getElementById('displaySubtotal')) {
+                document.getElementById('displaySubtotal').textContent = '$' + formatNumber(quotation.subtotal || 0);
+            }
+            
+            // 할인
+            if (document.getElementById('displayDiscount')) {
+                const discount = quotation.discountAmount || 0;
+                document.getElementById('displayDiscount').textContent = (discount > 0 ? '-$' : '$') + formatNumber(Math.abs(discount));
+            }
+            
+            // 추가 서비스
+            if (document.getElementById('displayAdditionalService')) {
+                document.getElementById('displayAdditionalService').textContent = '$' + formatNumber(quotation.additionalServiceAmount || 0);
+            }
+            
+            // 순금액 (공급가액)
+            if (document.getElementById('displayNetAmount')) {
+                document.getElementById('displayNetAmount').textContent = '$' + formatNumber(quotation.finalAmount || quotation.subtotal || 0);
+            }
+            
+            // 부가세
+            if (document.getElementById('displayVat')) {
+                document.getElementById('displayVat').textContent = '$' + formatNumber(quotation.vatAmount || 0);
+            }
+            
+            // 총합계
+            if (document.getElementById('displayTotalAmount')) {
+                document.getElementById('displayTotalAmount').textContent = '$' + formatNumber(quotation.totalAmount || 0);
+            }
+        }
+
+        // 숫자 포맷팅 함수
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // 🎬 4개 기본 항목 보장 함수
+        function ensureFourItems() {
+            const tableBody = document.getElementById('itemsTableBody');
+            if (!tableBody) return;
+            
+            const currentRows = tableBody.children.length;
+            
+            // 현재 행이 4개가 아니면 초기화하여 4개 생성
+            if (currentRows !== 4) {
+                tableBody.innerHTML = '';
+                
+                for (let i = 0; i < 4; i++) {
+                    const row = document.createElement('tr');
+                    if (i < 2) {
+                        // 처음 2개는 기본 샘플 데이터 (영어 버전)
+                        const sampleData = [
+                            { service: 'Software Training', spec: 'CAM350 Training - Professional software training program', price: 250000 },
+                            { service: 'JIG Manufacturing Service', spec: '30 dia JIG manufacturing - Precision custom JIG design and manufacturing', price: 50000 }
+                        ];
+                        const sample = sampleData[i];
+                        row.innerHTML = `
+                            <td>${i + 1}</td>
+                            <td>${sample.service}</td>
+                            <td class="spec-cell">${sample.spec}</td>
+                            <td>1</td>
+                            <td class="amount-cell">${formatNumber(sample.price)}</td>
+                            <td class="amount-cell">${formatNumber(sample.price)}</td>
+                        `;
+                    } else {
+                        // 나머지는 빈 행
+                        row.innerHTML = `
+                            <td>${i + 1}</td>
+                            <td>-</td>
+                            <td class="spec-cell">-</td>
+                            <td>1</td>
+                            <td class="amount-cell">0</td>
+                            <td class="amount-cell">0</td>
+                        `;
+                    }
+                    tableBody.appendChild(row);
+                }
+                
+                console.log('✅ 인보이스 4개 항목 기본 설정 완료');
+            }
+        }
+
+        // 📊 구글 시트에 인보이스 저장
+        async function saveToGoogleSheets() {
+            try {
+                // Google Apps Script 웹앱 URL
+                const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbw-8f6dWXixqUpfbHDbP4zS6kBEzitkqk4e148rvWxFQpeINaA8XAvrOY_nUb7Kra2jCA/exec';
+                
+                // 인보이스 데이터 수집
+                const invoiceData = collectInvoiceData();
+                
+                // 구글 시트 포맷으로 데이터 변환
+                const sheetData = formatForGoogleSheets(invoiceData);
+                
+                // 로딩 메시지 표시
+                IBS_UTILS.showMessage('📊 구글 시트에 저장 중...', 'info');
+                
+                // 구글 시트에 전송
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(sheetData)
+                });
+                
+                // 성공 메시지
+                IBS_UTILS.showMessage('✅ 구글 시트에 인보이스가 성공적으로 저장되었습니다!', 'success');
+                
+                console.log('📊 구글 시트 저장 완료:', sheetData);
+                
+            } catch (error) {
+                console.error('❌ 구글 시트 저장 오류:', error);
+                IBS_UTILS.showMessage('❌ 구글 시트 저장 중 오류가 발생했습니다.', 'error');
+            }
+        }
+
+        // 인보이스 데이터 수집
+        function collectInvoiceData() {
+            return {
+                invoiceNumber: document.getElementById('invoice-number')?.value || `INV-${Date.now()}`,
+                issueDate: document.getElementById('invoice-date')?.value || new Date().toISOString().split('T')[0],
+                dueDate: document.getElementById('due-date')?.value || '',
+                customerCompany: document.getElementById('company-name')?.value || '',
+                contactPerson: document.getElementById('customer-name')?.value || '',
+                phone: document.getElementById('customer-phone')?.value || '',
+                email: document.getElementById('customer-email')?.value || '',
+                projectName: document.getElementById('project-name')?.value || 'JIG Manufacturing',
+                status: 'Issued',
+                items: collectTableItems(),
+                amounts: collectAmountData()
+            };
+        }
+
+        // 테이블 아이템 데이터 수집 (4개 고정)
+        function collectTableItems() {
+            const items = [];
+            const tableBody = document.getElementById('itemsTableBody');
+            
+            if (tableBody) {
+                const rows = tableBody.querySelectorAll('tr');
+                for (let i = 0; i < 4; i++) {
+                    if (rows[i]) {
+                        const cells = rows[i].querySelectorAll('td');
+                        items.push({
+                            name: cells[1]?.textContent.trim() || '',
+                            spec: cells[2]?.textContent.trim() || '',
+                            qty: cells[3]?.textContent.trim() || '1',
+                            unitPrice: parseFloat(cells[4]?.textContent.replace(/[,$]/g, '')) || 0,
+                            amount: parseFloat(cells[5]?.textContent.replace(/[,$]/g, '')) || 0
+                        });
+                    } else {
+                        items.push({ name: '', spec: '', qty: '1', unitPrice: 0, amount: 0 });
+                    }
+                }
+            }
+            
+            return items;
+        }
+
+        // 금액 데이터 수집
+        function collectAmountData() {
+            const subtotalText = document.getElementById('displaySubtotal')?.textContent || '$0';
+            const discountText = document.getElementById('displayDiscount')?.textContent || '$0';
+            const additionalText = document.getElementById('displayAdditionalService')?.textContent || '$0';
+            const netAmountText = document.getElementById('displayNetAmount')?.textContent || '$0';
+            const vatText = document.getElementById('displayVat')?.textContent || '$0';
+            const totalText = document.getElementById('displayTotalAmount')?.textContent || '$0';
+            
+            return {
+                subtotal: parseFloat(subtotalText.replace(/[,$]/g, '')) || 0,
+                discount: parseFloat(discountText.replace(/[,$-]/g, '')) || 0,
+                additionalService: parseFloat(additionalText.replace(/[,$]/g, '')) || 0,
+                netAmount: parseFloat(netAmountText.replace(/[,$]/g, '')) || 0,
+                vat: parseFloat(vatText.replace(/[,$]/g, '')) || 0,
+                total: parseFloat(totalText.replace(/[,$]/g, '')) || 0
+            };
+        }
+
+        // 구글 시트 포맷으로 데이터 변환
+        function formatForGoogleSheets(data) {
+            return {
+                action: 'saveInvoice',
+                data: {
+                    timestamp: new Date().toISOString(),
+                    invoiceNo: data.invoiceNumber,
+                    issueDate: data.issueDate,
+                    dueDate: data.dueDate,
+                    customerCompany: data.customerCompany,
+                    contactPerson: data.contactPerson,
+                    phone: data.phone,
+                    email: data.email,
+                    projectName: data.projectName,
+                    status: data.status,
+                    // Item1
+                    item1Name: data.items[0]?.name || '',
+                    item1Spec: data.items[0]?.spec || '',
+                    item1Qty: data.items[0]?.qty || '',
+                    item1UnitPrice: data.items[0]?.unitPrice || 0,
+                    item1Amount: data.items[0]?.amount || 0,
+                    // Item2
+                    item2Name: data.items[1]?.name || '',
+                    item2Spec: data.items[1]?.spec || '',
+                    item2Qty: data.items[1]?.qty || '',
+                    item2UnitPrice: data.items[1]?.unitPrice || 0,
+                    item2Amount: data.items[1]?.amount || 0,
+                    // Item3
+                    item3Name: data.items[2]?.name || '',
+                    item3Spec: data.items[2]?.spec || '',
+                    item3Qty: data.items[2]?.qty || '',
+                    item3UnitPrice: data.items[2]?.unitPrice || 0,
+                    item3Amount: data.items[2]?.amount || 0,
+                    // Item4
+                    item4Name: data.items[3]?.name || '',
+                    item4Spec: data.items[3]?.spec || '',
+                    item4Qty: data.items[3]?.qty || '',
+                    item4UnitPrice: data.items[3]?.unitPrice || 0,
+                    item4Amount: data.items[3]?.amount || 0,
+                    // Amounts
+                    subtotal: data.amounts.subtotal,
+                    discount: data.amounts.discount,
+                    additionalService: data.amounts.additionalService,
+                    netAmount: data.amounts.netAmount,
+                    vat: data.amounts.vat,
+                    totalAmount: data.amounts.total
+                }
+            };
+        }
+
+        // 🖨️ 인쇄 기능
+        function printInvoice() {
+            window.print();
+        }
+
+        // 📧 이메일 전송 (향후 구현)
+        function emailInvoice() {
+            IBS_UTILS.showMessage('이메일 전송 기능은 곧 제공될 예정입니다.', 'info');
+        }
+
+        // 📋 구글 시트 열기
+        function openGoogleSheet() {
+            const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1MUHiU8a0p1aBs0wU94gmmlugwmB9qSYO8NLl-qZ9-ho/edit?gid=2014863605#gid=2014863605';
+            
+            // 새 탭에서 구글 시트 열기
+            window.open(SHEET_URL, '_blank');
+            
+            IBS_UTILS.showMessage('📋 구글 시트가 새 탭에서 열렸습니다!', 'info');
+        }
+
+        // URL 파라미터에서 견적서 키 확인 및 자동 로드
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const quotationKey = urlParams.get('key');
+            const fromQuotation = urlParams.get('from') === 'quotation';
+            
+            if (fromQuotation && quotationKey) {
+                console.log('💰 견적서에서 전송된 데이터 감지:', quotationKey);
+                
+                // URL에서 전달된 견적서 키로 데이터 로드
+                const quotationData = localStorage.getItem(quotationKey);
+                if (quotationData) {
+                    try {
+                        const data = JSON.parse(quotationData);
+                        console.log('✅ 견적서 데이터 자동 로드:', data);
+                        
+                        // 견적서 선택 드롭다운 업데이트
+                        refreshQuotationList();
+                        
+                        // 1초 후 자동으로 견적서 데이터 적용
+                        setTimeout(() => {
+                            populateInvoiceForm(data);
+                            IBS_UTILS.showMessage('✅ 견적서에서 전송된 데이터가 자동으로 로드되었습니다!', 'success');
+                        }, 1000);
+                        
+                    } catch (error) {
+                        console.error('❌ 견적서 데이터 파싱 오류:', error);
+                        IBS_UTILS.showMessage('❌ 견적서 데이터 로드 중 오류가 발생했습니다.', 'error');
+                    }
+                } else {
+                    console.log('❌ 견적서 데이터를 찾을 수 없음:', quotationKey);
+                    IBS_UTILS.showMessage('❌ 견적서 데이터를 찾을 수 없습니다.', 'error');
+                }
+            } else {
+                // 일반적인 페이지 로드
+                refreshQuotationList();
+            }
+        }
+
+        // 🎬 초기화 및 이벤트 리스너
+        document.addEventListener('DOMContentLoaded', function() {
+            // URL 파라미터 확인 및 자동 로드
+            checkUrlParams();
+            
+            // 기본 4개 아이템 행 보장
+            setTimeout(() => {
+                ensureFourItems();
+            }, 100);
+        });
+    </script>
+</body>
+</html> 
